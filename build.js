@@ -6,13 +6,13 @@
  */
 
 const fs = require('fs');
-const config = require('./packages/connectkit/package.json');
+const config = require('./packages/luncconnect/package.json');
 
-const file = fs.readFileSync('packages/connectkit/src/index.ts', 'utf8');
+const file = fs.readFileSync('packages/luncconnect/src/index.ts', 'utf8');
 const lines = file.split('\n');
 const versionLine = lines.findIndex((line) =>
   line.includes('export const CONNECTKIT_VERSION = ')
 );
 lines[versionLine] = `export const CONNECTKIT_VERSION = '${config.version}';`;
 
-fs.writeFileSync('packages/connectkit/src/index.ts', lines.join('\n'), 'utf8');
+fs.writeFileSync('packages/luncconnect/src/index.ts', lines.join('\n'), 'utf8');

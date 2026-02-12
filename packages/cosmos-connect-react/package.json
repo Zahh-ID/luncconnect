@@ -1,0 +1,26 @@
+{
+  "name": "cosmos-connect-react",
+  "version": "0.1.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "cosmos-connect-core": "*",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "cosmos-connect-core": "*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "framer-motion": "^6.5.1"
+  }
+}

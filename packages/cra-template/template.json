@@ -8,10 +8,10 @@
       "@types/node": "^16.7.13",
       "@types/react": "^18.0.0",
       "@types/react-dom": "^18.0.0",
-      "connectkit": "latest",
+      "luncconnect": "latest",
       "typescript": "^5.0.4",
-      "viem": "^2.23.2",
-      "wagmi": "^2.14.11",
+      "cosmos-connect-react": "latest",
+      "cosmos-connect-core": "latest",
       "web-vitals": "^2.1.0"
     },
     "eslintConfig": {

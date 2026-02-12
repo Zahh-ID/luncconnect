@@ -3,26 +3,33 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { WagmiProvider, createConfig } from 'wagmi';
-import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
+import { ConnectKitProvider } from 'luncconnect';
+import {
+  KeplrWallet,
+  LeapWallet,
+  GalaxyStationWallet,
+} from 'cosmos-connect-core';
 
-const config = createConfig(
-  getDefaultConfig({
-    appName: 'My App Name',
-    walletConnectProjectId: process.env.REACT_APP_WALLETCONNECT_PROJECT_ID!,
-  })
-);
+const terraClassic = {
+  chainId: 'columbus-5',
+  rpc: 'https://terra-classic-rpc.publicnode.com',
+  rest: 'https://terra-classic-lcd.publicnode.com',
+  bech32Prefix: 'terra',
+};
+
+const config = {
+  chains: [terraClassic],
+  wallets: [new KeplrWallet(), new LeapWallet(), new GalaxyStationWallet()],
+};
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <WagmiProvider config={config}>
-      <ConnectKitProvider theme="auto">
-        <App />
-      </ConnectKitProvider>
-    </WagmiProvider>
+    <ConnectKitProvider config={config}>
+      <App />
+    </ConnectKitProvider>
   </React.StrictMode>
 );
 

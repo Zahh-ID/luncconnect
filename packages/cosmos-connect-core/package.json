@@ -1,0 +1,18 @@
+{
+  "name": "cosmos-connect-core",
+  "version": "0.1.1",
+  "description": "Core SDK for Cosmos Connect",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@goblinhunt/cosmes": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.0.0"
+  }
+}
