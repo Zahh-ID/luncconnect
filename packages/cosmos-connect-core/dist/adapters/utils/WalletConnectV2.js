@@ -110,34 +110,48 @@ export class WalletConnectV2 {
                 }
             }
         }
-        // Initialise a new session
-        const { uri, approval } = await this.signClient.connect({
-            requiredNamespaces: {
-                cosmos: {
-                    chains: [...chainIdsSet].map((id) => this.toCosmosNamespace(id)),
-                    methods: Object.values(Method),
-                    events: Object.values(Event),
+        // Initialise a new session with auto-regeneration on timeout
+        const maxRetries = 3;
+        const pairingTimeout = 300000; // 5 minutes per attempt
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+            const { uri, approval } = await this.signClient.connect({
+                requiredNamespaces: {
+                    cosmos: {
+                        chains: [...chainIdsSet].map((id) => this.toCosmosNamespace(id)),
+                        methods: Object.values(Method),
+                        events: Object.values(Event),
+                    },
                 },
-            },
-        });
-        if (uri) {
-            console.log('WalletConnectV2: URI generated', uri);
-            this._uri = uri; // Store it locally too
-            this.onUriCbs.forEach((cb) => cb(uri));
-            console.log('WalletConnectV2: Waiting for approval...');
-            const approvalPromise = approval();
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection approval timed out')), 60000));
-            const { topic } = await Promise.race([
-                approvalPromise,
-                timeoutPromise,
-            ]);
-            console.log('WalletConnectV2: Approved session topic', topic);
-            // Save this new session to local storage
-            const newSession = {
-                topic,
-                chainIds: [...chainIdsSet],
-            };
-            localStorage.setItem(this.sessionStorageKey, JSON.stringify(newSession));
+            });
+            if (uri) {
+                console.log(`WalletConnectV2: URI generated (attempt ${attempt + 1}/${maxRetries})`, uri);
+                this._uri = uri;
+                this.onUriCbs.forEach((cb) => cb(uri));
+                console.log('WalletConnectV2: Waiting for approval...');
+                try {
+                    const approvalPromise = approval();
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection approval timed out')), pairingTimeout));
+                    const { topic } = await Promise.race([
+                        approvalPromise,
+                        timeoutPromise,
+                    ]);
+                    console.log('WalletConnectV2: Approved session topic', topic);
+                    const newSession = {
+                        topic,
+                        chainIds: [...chainIdsSet],
+                    };
+                    localStorage.setItem(this.sessionStorageKey, JSON.stringify(newSession));
+                    return; // Successfully connected
+                }
+                catch (err) {
+                    if (err?.message === 'Connection approval timed out' &&
+                        attempt < maxRetries - 1) {
+                        console.log(`WalletConnectV2: Timed out, regenerating QR code (attempt ${attempt + 2}/${maxRetries})...`);
+                        continue; // Retry with a new URI
+                    }
+                    throw err;
+                }
+            }
         }
     }
     disconnect() {
