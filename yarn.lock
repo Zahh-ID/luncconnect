@@ -1389,13 +1389,14 @@ cosmjs-types@^0.9.0:
   integrity sha512-MN/yUe6mkJwHnCFfsNPeCfXVhyxHYW6c/xDUzrSbBycYzw++XvWDMJArXp2pLdgD6FQ8DW79vkPjeNKVrXaHeQ==
 
 cosmos-connect-core@*, "cosmos-connect-core@file:/home/zahh/2026/explore/cosmconnect/connectkit/packages/cosmos-connect-core":
-  version "0.1.6"
+  version "0.1.14"
   resolved "file:packages/cosmos-connect-core"
   dependencies:
     "@goblinhunt/cosmes" latest
+    "@walletconnect/legacy-client" "^2.0.0"
 
 cosmos-connect-react@*, "cosmos-connect-react@file:/home/zahh/2026/explore/cosmconnect/connectkit/packages/cosmos-connect-react":
-  version "0.1.7"
+  version "0.1.15"
   resolved "file:packages/cosmos-connect-react"
   dependencies:
     framer-motion "^6.5.1"
@@ -2022,7 +2023,7 @@ lru-cache@^5.1.1:
     yallist "^3.0.2"
 
 "luncconnect@file:/home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect":
-  version "1.0.9"
+  version "1.3.5"
   resolved "file:packages/luncconnect"
   dependencies:
     buffer "^6.0.3"

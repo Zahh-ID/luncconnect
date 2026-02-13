@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "cosmos-connect-core": "^0.1.12",
-    "cosmos-connect-react": "^0.1.13",
+    "cosmos-connect-core": "^0.1.14",
+    "cosmos-connect-react": "^0.1.15",
     "framer-motion": "^6.3.11",
-    "luncconnect": "^1.3.3",
+    "luncconnect": "^1.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^5.3.5"
