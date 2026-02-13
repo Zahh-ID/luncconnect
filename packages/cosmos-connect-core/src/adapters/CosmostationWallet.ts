@@ -1,6 +1,6 @@
-import { WalletAdapter, Chain, Account } from "../core/types.js";
-import { WalletConnectWallet } from "./WalletConnectWallet.js";
-import { WalletName } from "@goblinhunt/cosmes/wallet";
+import { WalletAdapter, Chain, Account } from '../core/types.js';
+import { WalletConnectWallet } from './WalletConnectWallet.js';
+import { WalletName } from '@goblinhunt/cosmes/wallet';
 
 // Basic Keplr-compatible provider structure in Cosmostation
 interface CosmostationProvider {
@@ -19,7 +19,7 @@ interface CosmostationProvider {
       signArbitrary(
         chainId: string,
         signer: string,
-        data: string,
+        data: string
       ): Promise<any>;
     };
   };
@@ -33,9 +33,9 @@ declare global {
 
 export class CosmostationWallet implements WalletAdapter {
   id = WalletName.COSMOSTATION;
-  name = "Cosmostation";
+  name = 'Cosmostation';
   icon =
-    "https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/all_chains/cosmos/resource/cosmostation.png";
+    'https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/all_chains/cosmos/resource/cosmostation.png';
 
   private wc?: WalletConnectWallet;
 
@@ -47,22 +47,21 @@ export class CosmostationWallet implements WalletAdapter {
         name: this.name,
         icon: this.icon,
         mobileAppDetails: {
-          name: "Cosmostation",
-          description: "Cosmostation Wallet",
+          name: 'Cosmostation',
           android:
-            "intent://wc#Intent;package=wannabit.io.cosmostaion;scheme=cosmostation;end;",
-          ios: "cosmostation://wc",
+            'intent://wc#Intent;package=wannabit.io.cosmostaion;scheme=cosmostation;end;',
+          ios: 'cosmostation://wc',
         },
       });
     }
   }
 
   installed(): boolean {
-    return typeof window !== "undefined" && !!window.cosmostation;
+    return typeof window !== 'undefined' && !!window.cosmostation;
   }
 
   getUri(): string {
-    return this.wc?.getUri() ?? "";
+    return this.wc?.getUri() ?? '';
   }
 
   onUpdate(callback: () => void): void {
@@ -75,7 +74,7 @@ export class CosmostationWallet implements WalletAdapter {
       if (this.wc) {
         return this.wc.connect(chain);
       }
-      throw new Error("Cosmostation extension not found");
+      throw new Error('Cosmostation extension not found');
     }
 
     try {
@@ -103,11 +102,11 @@ export class CosmostationWallet implements WalletAdapter {
 
   async signTx(_bytes: Uint8Array): Promise<Uint8Array> {
     throw new Error(
-      "signTx not fully implemented for raw bytes in Cosmostation yet.",
+      'signTx not fully implemented for raw bytes in Cosmostation yet.'
     );
   }
 
   async signMsg(_msg: string): Promise<Uint8Array> {
-    throw new Error("signMsg not implemented yet.");
+    throw new Error('signMsg not implemented yet.');
   }
 }

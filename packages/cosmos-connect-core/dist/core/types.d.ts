@@ -1,5 +1,6 @@
 export interface Chain {
     chainId: string;
+    name?: string;
     rpc: string;
     rest?: string;
     bech32Prefix: string;
@@ -24,7 +25,7 @@ export interface WalletAdapter {
     getUri?(): string;
     onUpdate?(callback: () => void): void;
 }
-export type ClientStatus = "disconnected" | "connecting" | "connected";
+export type ClientStatus = 'disconnected' | 'connecting' | 'connected';
 export interface ClientState {
     currentChain: Chain | null;
     currentWallet: WalletAdapter | null;

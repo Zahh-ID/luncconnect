@@ -1,6 +1,6 @@
-import { WalletConnectV2 } from "./utils/WalletConnectV2.js";
-import { WalletAdapter, Chain, Account } from "../core/types.js";
-import { MobileAppDetails } from "./utils/QRCodeModal.js";
+import { WalletConnectV2 } from './utils/WalletConnectV2.js';
+import { WalletAdapter, Chain, Account } from '../core/types.js';
+import { MobileAppDetails, SignerMetadata } from './utils/QRCodeModal.js';
 export declare class WalletConnectWallet implements WalletAdapter {
     id: string;
     name: string;
@@ -9,12 +9,13 @@ export declare class WalletConnectWallet implements WalletAdapter {
     private _uri;
     private _connecting;
     private _updateCallback?;
-    constructor({ projectId, id, name, icon, mobileAppDetails, }: {
+    constructor({ projectId, id, name, icon, mobileAppDetails, signerMetadata, }: {
         projectId: string;
         id?: string;
         name?: string;
         icon?: string;
         mobileAppDetails?: MobileAppDetails;
+        signerMetadata?: SignerMetadata;
     });
     installed(): boolean;
     getUri(): string;

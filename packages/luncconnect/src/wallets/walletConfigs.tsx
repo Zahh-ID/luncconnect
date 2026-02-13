@@ -38,9 +38,10 @@ export type WalletConfigProps = {
     edge?: string;
     safari?: string;
   };
-  // Create URI for QR code, where uri is encoded data from WalletConnect
   getWalletConnectDeeplink?: (uri: string) => string;
   shouldDeeplinkDesktop?: boolean;
+  isStation?: boolean;
+  isLuncDash?: boolean;
 };
 
 // Organised in alphabetical order by key
@@ -184,6 +185,7 @@ export const walletConfigs: {
         `action=wallet_connect&payload=${encodeURIComponent(uri)}`
       )}&apn=money.terra.station&ibi=money.terra.station&isi=1548434735`;
     },
+    isStation: true,
   },
   luncdash: {
     name: 'LUNCDash',
@@ -195,13 +197,12 @@ export const walletConfigs: {
       website: 'https://luncdash.com/',
     },
     getWalletConnectDeeplink: (uri: string) => {
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isAndroid) {
-        // Use the same scheme for Android as requested
-        return `luncdash://wc?${encodeURIComponent(uri)}`;
-      }
-      return `luncdash://wc?${encodeURIComponent(uri)}`;
+      return `luncdash://wallet_connect?${encodeURIComponent(
+        `payload=${encodeURIComponent(uri)}`
+      )}`;
     },
+    isStation: true,
+    isLuncDash: true,
   },
   walletConnect: {
     name: 'Other Wallets',

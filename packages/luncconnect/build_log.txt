@@ -1,0 +1,35 @@
+
+> luncconnect@1.0.5 build
+> rollup --config rollup.config.prod.js
+
+[36m
+[1m./src/index.ts[22m → [1m./build/index.es.js[22m...[39m
+[1m[33m(!) Unresolved dependencies[39m[22m
+[90mhttps://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency[39m
+[1mcosmos-connect-core[22m (imported by src/defaultConnectors.ts, src/wallets/index.ts)
+[1mbuffer[22m (imported by src/components/ConnectKit.tsx)
+[1mstyled-components[22m (imported by src/components/ConnectKit.tsx, src/components/BalanceButton/index.tsx, src/components/ConnectModal/demo.tsx, src/styles/index.ts, src/styles/styled/index.ts, src/components/Common/Avatar/styles.ts, src/components/Common/Chain/styles.ts, src/utils/p3.ts, src/components/Common/Modal/styles.ts, src/components/Pages/Onboarding/styles.ts, src/components/Pages/About/graphics.tsx, src/components/Pages/About/styles.ts, src/components/Pages/Connectors/styles.ts, src/components/Pages/Profile/styles.ts)
+[1mdetect-browser[22m (imported by src/utils/index.ts)
+[1mreact-use-measure[22m (imported by src/components/Common/ThemedButton/index.tsx)
+[1mreact-transition-state[22m (imported by src/components/Common/Modal/index.tsx)
+[1m[31m[!] [1m(plugin rpt2) Error: /home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/src/components/Common/ChainSelect/index.tsx(178,35): semantic error TS2339: [31mProperty 'id' does not exist on type 'Chain'.[31m[22m[1m[39m[22m
+src/components/Common/ChainSelect/index.tsx
+[2mError: /home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/src/components/Common/ChainSelect/index.tsx(178,35): semantic error TS2339: [31mProperty 'id' does not exist on type 'Chain'.[39m
+    at error (/home/zahh/2026/explore/cosmconnect/connectkit/node_modules/rollup/dist/shared/rollup.js:198:30)
+    at throwPluginError (/home/zahh/2026/explore/cosmconnect/connectkit/node_modules/rollup/dist/shared/rollup.js:21718:12)
+    at Object.error (/home/zahh/2026/explore/cosmconnect/connectkit/node_modules/rollup/dist/shared/rollup.js:22672:20)
+    at Object.error (/home/zahh/2026/explore/cosmconnect/connectkit/node_modules/rollup/dist/shared/rollup.js:21895:42)
+    at RollupContext.error (/home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/node_modules/rollup-plugin-typescript2/src/rollupcontext.ts:37:18)
+    at /home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/node_modules/rollup-plugin-typescript2/src/print-diagnostics.ts:41:11
+    at arrayEach (/home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/node_modules/rollup-plugin-typescript2/node_modules/lodash/lodash.js:530:11)
+    at lodash._.each [as forEach] (/home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/node_modules/rollup-plugin-typescript2/node_modules/lodash/lodash.js:9410:14)
+    at printDiagnostics (/home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/node_modules/rollup-plugin-typescript2/src/print-diagnostics.ts:9:2)
+    at Object.transform (/home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect/node_modules/rollup-plugin-typescript2/src/index.ts:244:5)[22m
+
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect
+npm error workspace luncconnect@1.0.5
+npm error location /home/zahh/2026/explore/cosmconnect/connectkit/packages/luncconnect
+npm error command failed
+npm error command sh -c rollup --config rollup.config.prod.js

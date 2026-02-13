@@ -1,21 +1,49 @@
-# luncconnect
+# LUNCConnect
 
-Beautiful, customizable UI components for connecting Cosmos wallets to your dApp. Built specifically for Terra Classic (LUNC) and the Cosmos ecosystem.
+LUNCConnect is a powerful [React](https://reactjs.org/) component library for connecting Cosmos wallets to your dApp. Built specifically for Terra Classic (LUNC) and Cosmos ecosystem, it provides a beautiful, seamless wallet connection experience. forked from [ConnectKit](https://github.com/family/connectkit)
 
-Forked from [ConnectKit](https://github.com/family/connectkit)
+## Features
 
-## Installation
-
-```bash
-npm install luncconnect cosmos-connect-react cosmos-connect-core
-```
+- 💡 **TypeScript Ready** — Get types straight out of the box.
+- 🌱 **Cosmos Ecosystem** — Built for Terra Classic and Cosmos chains.
+- 🔌 **Multiple Wallets** — Supports Keplr, Leap, Cosmostation, Station, LUNCDash, and more.
+- 🖥️ **Simple UX** — Give users a simple, attractive experience.
+- 🎨 **Beautiful Themes** — Predesigned themes or full customization.
+- 📱 **Mobile Support** — Deep linking for mobile wallet apps.
 
 ## Quick Start
 
+Get started with a LUNCConnect project by running one of the following in your terminal:
+
+#### npm
+
+```sh
+npx create-react-app my-app --template luncconnect
+```
+
+#### yarn
+
+```sh
+yarn create react-app my-app --template luncconnect
+```
+
+#### pnpm
+
+```sh
+pnpm dlx create-react-app ./my-app --template luncconnect
+```
+
+## Installation
+
+```sh
+npm install LUNCConnect @yourorg/cosmos-connect-core @yourorg/cosmos-connect-react
+```
+
+## Basic Usage
+
 ```tsx
-import { ConnectKitProvider, ConnectKitButton } from 'luncconnect';
-import { CosmosProvider } from 'cosmos-connect-react';
-import { KeplrWallet, LeapWallet } from 'cosmos-connect-core';
+import { ConnectKitProvider, ConnectKitButton } from 'LUNCConnect';
+import { KeplrWallet, LeapWallet } from '@yourorg/cosmos-connect-core';
 
 const terraClassic = {
   chainId: 'columbus-5',
@@ -31,58 +59,26 @@ const config = {
 
 function App() {
   return (
-    <CosmosProvider config={config}>
-      <ConnectKitProvider>
-        <ConnectKitButton />
-      </ConnectKitProvider>
-    </CosmosProvider>
+    <ConnectKitProvider config={config}>
+      <ConnectKitButton />
+    </ConnectKitProvider>
   );
 }
 ```
 
-## Features
-
-- 🎨 **Beautiful UI** - Pre-designed themes with full customization
-- 💡 **TypeScript** - Full type safety out of the box
-- 📱 **Mobile Support** - Deep linking for mobile wallet apps
-- 🌐 **Multi-Wallet** - Keplr, Leap, Cosmostation, Station, and more
-- 🎭 **Themeable** - Multiple built-in themes or create your own
-- ⚡ **Fast** - Optimized performance with React
-
 ## Supported Wallets
 
-- Keplr (Browser + Mobile)
-- Leap (Browser + Mobile)
-- Cosmostation (Browser + Mobile)
-- Station (Terra's official wallet)
-- Galaxy Station
-- LUNCDash
-
-## Customization
-
-```tsx
-<ConnectKitProvider
-  customTheme={{
-    '--ck-connectbutton-background': '#1a1b1f',
-    '--ck-connectbutton-color': '#ffffff',
-    '--ck-connectbutton-border-radius': '12px',
-  }}
->
-  <ConnectKitButton />
-</ConnectKitProvider>
-```
-
-## Components
-
-- `<ConnectKitButton />` - Main connect button
-- `<ConnectKitProvider />` - Context provider
-- `<Avatar />` - Account avatar
-- Custom modal pages and components
+- **Keplr** - Browser extension and mobile app
+- **Leap** - Browser extension and mobile app
+- **Cosmostation** - Browser extension and mobile app
+- **Station** - Terra's official wallet
+- **LUNCDash** - LUNC-focused wallet
+- **Galaxy Station** - Alternative Station wallet
 
 ## License
 
-BSD-2-Clause
+See [LICENSE](./LICENSE) for more information.
 
 ## Author
 
-[@0xzahh](https://github.com/0xzahh)
+Created by [@0xzahh](https://github.com/0xzahh)

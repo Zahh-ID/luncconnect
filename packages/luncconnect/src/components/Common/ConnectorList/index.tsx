@@ -98,7 +98,7 @@ const ConnectorItem = ({
         {wallet.icon}
       </ConnectorIcon>
       <ConnectorLabel>
-        {isMobile ? (wallet.shortName ?? wallet.name) : wallet.name}
+        {isMobile ? wallet.shortName ?? wallet.name : wallet.name}
         {!context.options?.hideRecentBadge && isRecent && (
           <RecentlyUsedTag>
             <span>Recent</span>

@@ -1,4 +1,4 @@
-import { MobileAppDetails } from "./QRCodeModal.js";
+import { MobileAppDetails, SignerMetadata } from './QRCodeModal.js';
 export type GetAccountResponse = {
     name?: string | undefined;
     address: string;
@@ -25,6 +25,7 @@ export type WalletConnectV2Config = {
 export declare class WalletConnectV2 {
     private readonly projectId;
     private readonly mobileAppDetails;
+    private readonly signerMetadata;
     private readonly sessionStorageKey;
     private readonly accountStorageKey;
     private readonly onDisconnectCbs;
@@ -32,7 +33,7 @@ export declare class WalletConnectV2 {
     private readonly onUriCbs;
     private signClient;
     private config?;
-    constructor(projectId: string, mobileAppDetails: MobileAppDetails, config?: WalletConnectV2Config);
+    constructor(projectId: string, mobileAppDetails: MobileAppDetails, signerMetadata: SignerMetadata, config?: WalletConnectV2Config);
     onUri(cb: (uri: string) => unknown): () => void;
     addChain(chainId: string, chainInfo: any): Promise<void>;
     connect(chainIds: string[]): Promise<void>;

@@ -1,6 +1,6 @@
-import { WalletAdapter, Chain, Account } from "../core/types.js";
-import { WalletConnectWallet } from "./WalletConnectWallet.js";
-import { WalletName } from "@goblinhunt/cosmes/wallet";
+import { WalletAdapter, Chain, Account } from '../core/types.js';
+import { WalletConnectWallet } from './WalletConnectWallet.js';
+import { WalletName } from '@goblinhunt/cosmes/wallet';
 
 // Basic Keplr type definitions to avoid errors without heavy deps
 interface Keplr {
@@ -25,9 +25,9 @@ declare global {
 
 export class KeplrWallet implements WalletAdapter {
   id = WalletName.KEPLR;
-  name = "Keplr";
+  name = 'Keplr';
   icon =
-    "https://raw.githubusercontent.com/chainapsis/keplr-wallet/master/packages/extension/src/public/assets/img/logo-256.png";
+    'https://raw.githubusercontent.com/chainapsis/keplr-wallet/master/packages/extension/src/public/assets/img/logo-256.png';
 
   private wc?: WalletConnectWallet;
 
@@ -39,22 +39,21 @@ export class KeplrWallet implements WalletAdapter {
         name: this.name,
         icon: this.icon,
         mobileAppDetails: {
-          name: "Keplr",
-          description: "Keplr Wallet",
+          name: 'Keplr',
           android:
-            "intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;",
-          ios: "keplrwallet://wcV2",
+            'intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;',
+          ios: 'keplrwallet://wcV2',
         },
       });
     }
   }
 
   installed(): boolean {
-    return typeof window !== "undefined" && !!window.keplr;
+    return typeof window !== 'undefined' && !!window.keplr;
   }
 
   getUri(): string {
-    return this.wc?.getUri() ?? "";
+    return this.wc?.getUri() ?? '';
   }
 
   onUpdate(callback: () => void): void {
@@ -67,7 +66,7 @@ export class KeplrWallet implements WalletAdapter {
       if (this.wc) {
         return this.wc.connect(chain);
       }
-      throw new Error("Keplr extension not found");
+      throw new Error('Keplr extension not found');
     }
 
     try {
@@ -94,7 +93,7 @@ export class KeplrWallet implements WalletAdapter {
   }
 
   async signTx(_bytes: Uint8Array): Promise<Uint8Array> {
-    console.debug("Keplr signTx", _bytes.length);
+    console.debug('Keplr signTx', _bytes.length);
     // In a real implementation, you'd decode bytes to SignDoc or use signDirect/Amino
     // Since the core SDK takes raw bytes, we assume the bytes ARE the signDoc or
     // the user wants to sign these specific bytes.
@@ -107,20 +106,20 @@ export class KeplrWallet implements WalletAdapter {
     // or provide a helper for cosmes integrations.
 
     throw new Error(
-      "signTx not fully implemented for raw bytes in Keplr yet. Use cosmes-compatible signers.",
+      'signTx not fully implemented for raw bytes in Keplr yet. Use cosmes-compatible signers.'
     );
   }
 
   async signMsg(_msg: string): Promise<Uint8Array> {
-    console.debug("Keplr signMsg", _msg.length);
+    console.debug('Keplr signMsg', _msg.length);
     const keplr = window.keplr;
-    if (!keplr) throw new Error("Keplr not found");
+    if (!keplr) throw new Error('Keplr not found');
 
     // Find current address (assumes already connected or we need to connect)
     // For simplicity, we'll try to get the first address.
     // This is often used for Siwe etc.
     // return keplr.signArbitrary(...);
 
-    throw new Error("signMsg not implemented yet.");
+    throw new Error('signMsg not implemented yet.');
   }
 }

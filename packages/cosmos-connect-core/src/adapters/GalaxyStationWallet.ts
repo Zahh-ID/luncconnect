@@ -1,6 +1,6 @@
-import { WalletAdapter, Chain, Account } from "../core/types.js";
-import { WalletConnectWallet } from "./WalletConnectWallet.js";
-import { WalletName } from "@goblinhunt/cosmes/wallet";
+import { WalletAdapter, Chain, Account } from '../core/types.js';
+import { WalletConnectWallet } from './WalletConnectWallet.js';
+import { WalletName } from '@goblinhunt/cosmes/wallet';
 
 // Basic Galaxy Station type definitions
 interface GalaxyStation {
@@ -23,10 +23,10 @@ declare global {
 }
 
 export class GalaxyStationWallet implements WalletAdapter {
-  id = "galaxy-station";
-  name = "Galaxy Station";
+  id = 'galaxy-station';
+  name = 'Galaxy Station';
   icon =
-    "https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png";
+    'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png';
 
   private wc?: WalletConnectWallet;
 
@@ -38,22 +38,29 @@ export class GalaxyStationWallet implements WalletAdapter {
         name: this.name,
         icon: this.icon,
         mobileAppDetails: {
-          name: "Galaxy Station",
-          description: "Galaxy Station Wallet (Terra Classic)",
+          name: 'Galaxy Station',
           android:
-            "https://station.hexxagon.io/wcV2#Intent;package=io.hexxagon.station;scheme=galaxystation;end;",
-          ios: "https://station.hexxagon.io/wcV2",
+            'https://station.hexxagon.io/wcV2#Intent;package=io.hexxagon.station;scheme=galaxystation;end;',
+          ios: 'https://station.hexxagon.io/wcV2',
+        },
+        signerMetadata: {
+          name: 'LUNCConnect',
+          description: 'Connect to LUNCConnect',
+          url: typeof window !== 'undefined' ? window.location.origin : '',
+          icons: [
+            'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png',
+          ],
         },
       });
     }
   }
 
   installed(): boolean {
-    return typeof window !== "undefined" && !!window.galaxyStation;
+    return typeof window !== 'undefined' && !!window.galaxyStation;
   }
 
   getUri(): string {
-    return this.wc?.getUri() ?? "";
+    return this.wc?.getUri() ?? '';
   }
 
   onUpdate(callback: () => void): void {
@@ -66,7 +73,7 @@ export class GalaxyStationWallet implements WalletAdapter {
       if (this.wc) {
         return this.wc.connect(chain);
       }
-      throw new Error("Galaxy Station Wallet extension not found");
+      throw new Error('Galaxy Station Wallet extension not found');
     }
 
     try {
@@ -82,7 +89,7 @@ export class GalaxyStationWallet implements WalletAdapter {
       };
     } catch (error: any) {
       throw new Error(
-        `Galaxy Station Wallet connection failed: ${error.message}`,
+        `Galaxy Station Wallet connection failed: ${error.message}`
       );
     }
   }
@@ -95,6 +102,6 @@ export class GalaxyStationWallet implements WalletAdapter {
   }
 
   async signTx(_bytes: Uint8Array): Promise<Uint8Array> {
-    throw new Error("signTx not implemented for Galaxy Station yet.");
+    throw new Error('signTx not implemented for Galaxy Station yet.');
   }
 }

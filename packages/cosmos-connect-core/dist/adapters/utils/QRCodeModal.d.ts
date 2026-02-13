@@ -1,12 +1,15 @@
+export type SignerMetadata = {
+    name: string;
+    description?: string;
+    url?: string;
+    icons?: string[];
+};
 export type MobileAppDetails = {
     name: string;
     android: string;
     ios: string;
     isStation?: boolean;
     isLuncDash?: boolean;
-    description?: string;
-    url?: string;
-    icons?: string[];
     projectId?: string;
 };
 export declare class QRCodeModal {

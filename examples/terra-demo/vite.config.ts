@@ -3,19 +3,10 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  base: '/luncconnect/',
   plugins: [react()],
   resolve: {
-    alias: {
-      connectkit: path.resolve(__dirname, '../../packages/connectkit/src'),
-      '@yourorg/cosmos-connect-react': path.resolve(
-        __dirname,
-        '../../../packages/react/src'
-      ),
-      '@yourorg/cosmos-connect-core': path.resolve(
-        __dirname,
-        '../../../packages/core/src'
-      ),
-    },
+    dedupe: ['react', 'react-dom', 'styled-components'],
   },
   define: {
     global: 'globalThis',

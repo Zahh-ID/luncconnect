@@ -1,4 +1,4 @@
-import { WalletAdapter, Chain, Account } from "../core/types.js";
+import { WalletAdapter, Chain, Account } from '../core/types.js';
 interface Station {
     keplr: {
         enable(chainId: string): Promise<void>;

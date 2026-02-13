@@ -1,4 +1,4 @@
-import { WalletAdapter, Chain, Account } from "../core/types.js";
+import { WalletAdapter, Chain, Account } from '../core/types.js';
 interface Leap {
     enable(chainId: string): Promise<void>;
     getKey(chainId: string): Promise<{

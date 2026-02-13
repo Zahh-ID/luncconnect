@@ -28,13 +28,13 @@ const ConnectWithQRCode: React.FC<{
   } = useWeb3();
 
   const wcUri = getUri(id);
-  // Always use the raw wcUri for the QR code itself to ensure any wallet can scan it.
-  // Deeplinks are better suited for "Open in App" buttons.
-  const uri = wcUri;
-
   const deeplink = wcUri
-    ? (wallet?.getWalletConnectDeeplink?.(wcUri) ?? wcUri)
+    ? wallet?.getWalletConnectDeeplink?.(wcUri) ?? wcUri
     : undefined;
+
+  // For Station-based wallets (including LUNCDash), the QR code should contain the scheme-wrapped URI.
+  // This ensures the mobile app identifies the intent correctly even when scanned.
+  const uri = wallet?.isStation || wallet?.isLuncDash ? deeplink : wcUri;
 
   const locales = useLocales({
     CONNECTORNAME: wallet?.name,

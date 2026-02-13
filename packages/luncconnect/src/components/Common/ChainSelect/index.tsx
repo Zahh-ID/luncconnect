@@ -175,10 +175,10 @@ const ChainSelector: React.FC = () => {
           >
             {disabled ? (
               <Tooltip message={locales.chainNetwork} xOffset={-6} delay={0.01}>
-                <Chain id={chain?.id} />
+                <Chain id={chain?.chainId} />
               </Tooltip>
             ) : (
-              <Chain id={chain?.id} />
+              <Chain id={chain?.chainId} />
             )}
             {!disabled && <ChevronDown style={{ top: 1, left: -3 }} />}
           </SwitchChainButton>

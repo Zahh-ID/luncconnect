@@ -1,14 +1,14 @@
-import { WalletConnectV2 } from "./utils/WalletConnectV2.js";
-import { base64 } from "@goblinhunt/cosmes/codec";
+import { WalletConnectV2 } from './utils/WalletConnectV2.js';
+import { base64 } from '@goblinhunt/cosmes/codec';
 export class WalletConnectWallet {
-    id = "walletConnect";
-    name = "Other Wallets";
-    icon = "https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Logo/Blue%20(Default)/Logo.svg";
+    id = 'walletConnect';
+    name = 'Other Wallets';
+    icon = 'https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Logo/Blue%20(Default)/Logo.svg';
     wc;
-    _uri = "";
+    _uri = '';
     _connecting = false;
     _updateCallback;
-    constructor({ projectId, id, name, icon, mobileAppDetails, }) {
+    constructor({ projectId, id, name, icon, mobileAppDetails, signerMetadata, }) {
         if (id)
             this.id = id;
         if (name)
@@ -16,16 +16,19 @@ export class WalletConnectWallet {
         if (icon)
             this.icon = icon;
         const details = mobileAppDetails || {
-            name: "Cosmos Connect",
-            description: "Connect to Cosmos app",
-            url: typeof window !== "undefined" ? window.location.origin : "",
-            icons: [
-                "https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Logo/Blue%20(Default)/Logo.svg",
-            ],
-            android: "intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;", // Default to Keplr for android
-            ios: "keplrwallet://wcV2", // Default to Keplr for ios
+            name: 'Cosmos Connect',
+            android: 'intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;', // Default to Keplr for android
+            ios: 'keplrwallet://wcV2', // Default to Keplr for ios
         };
-        this.wc = new WalletConnectV2(projectId, details);
+        const metadata = signerMetadata || {
+            name: 'LUNCConnect',
+            description: 'Connect to LUNCConnect',
+            url: typeof window !== 'undefined' ? window.location.origin : '',
+            icons: [
+                'https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Logo/Blue%20(Default)/Logo.svg',
+            ],
+        };
+        this.wc = new WalletConnectV2(projectId, details, metadata);
         this.wc.onUri((uri) => {
             this._uri = uri;
             this._updateCallback?.();
@@ -40,17 +43,17 @@ export class WalletConnectWallet {
     _connectPromise = null;
     async connect(chain) {
         if (this._connectPromise) {
-            console.log("WalletConnectWallet: connect already in progress, returning existing promise...");
+            console.log('WalletConnectWallet: connect already in progress, returning existing promise...');
             return this._connectPromise;
         }
         this._connectPromise = (async () => {
-            console.log("WalletConnectWallet: connect called for chain", chain.chainId);
+            console.log('WalletConnectWallet: connect called for chain', chain.chainId);
             this._connecting = true;
             try {
                 // This will trigger our onUri callback
-                console.log("WalletConnectWallet: triggering wc.connect...");
+                console.log('WalletConnectWallet: triggering wc.connect...');
                 await this.wc.connect([chain.chainId]);
-                console.log("WalletConnectWallet: wc.connect settled");
+                console.log('WalletConnectWallet: wc.connect settled');
                 // After approval, keys are set
                 const accountRes = await this.wc.getAccount(chain.chainId);
                 return {
@@ -61,7 +64,7 @@ export class WalletConnectWallet {
                 };
             }
             catch (e) {
-                console.error("WalletConnectWallet: Connection failed", e);
+                console.error('WalletConnectWallet: Connection failed', e);
                 throw e;
             }
             finally {
@@ -73,11 +76,11 @@ export class WalletConnectWallet {
     }
     async disconnect() {
         this.wc.disconnect();
-        this._uri = "";
+        this._uri = '';
         this._connecting = false;
     }
     async signTx(_bytes) {
-        throw new Error("signTx not implemented directly on adapter. Use client.signAndBroadcast");
+        throw new Error('signTx not implemented directly on adapter. Use client.signAndBroadcast');
     }
     onUpdate(callback) {
         this._updateCallback = callback;

@@ -1,8 +1,8 @@
-import { WalletConnectWallet } from "./WalletConnectWallet.js";
+import { WalletConnectWallet } from './WalletConnectWallet.js';
 export class StationWallet {
-    id = "station";
-    name = "Station Wallet";
-    icon = "https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png";
+    id = 'station';
+    name = 'Station Wallet';
+    icon = 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png';
     wc;
     constructor(options) {
         if (options?.projectId) {
@@ -12,11 +12,18 @@ export class StationWallet {
                 name: this.name,
                 icon: this.icon,
                 mobileAppDetails: {
-                    name: "Station Wallet",
-                    description: "Station Wallet (Interchain)",
-                    android: "terrastation://wc",
-                    ios: "terrastation://wc",
+                    name: 'Station Wallet',
+                    android: 'terrastation://wc',
+                    ios: 'terrastation://wc',
                     isStation: true,
+                },
+                signerMetadata: {
+                    name: 'LUNCConnect',
+                    description: 'Connect to LUNCConnect',
+                    url: typeof window !== 'undefined' ? window.location.origin : '',
+                    icons: [
+                        'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png',
+                    ],
                 },
             });
         }
@@ -24,10 +31,10 @@ export class StationWallet {
     installed() {
         // Note: Both Station and Galaxy Station might use window.station.
         // Usually one is installed at a time.
-        return typeof window !== "undefined" && !!window.station;
+        return typeof window !== 'undefined' && !!window.station;
     }
     getUri() {
-        return this.wc?.getUri() ?? "";
+        return this.wc?.getUri() ?? '';
     }
     onUpdate(callback) {
         this.wc?.onUpdate(callback);
@@ -38,7 +45,7 @@ export class StationWallet {
             if (this.wc) {
                 return this.wc.connect(chain);
             }
-            throw new Error("Station Wallet extension not found");
+            throw new Error('Station Wallet extension not found');
         }
         try {
             const provider = station.keplr;
@@ -62,6 +69,6 @@ export class StationWallet {
         return Promise.resolve();
     }
     async signTx(_bytes) {
-        throw new Error("signTx not implemented for Station Wallet yet.");
+        throw new Error('signTx not implemented for Station Wallet yet.');
     }
 }

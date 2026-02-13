@@ -1,15 +1,20 @@
 {
   "name": "cosmos-connect-core",
-  "version": "0.1.1",
+  "version": "0.1.12",
   "description": "Core SDK for Cosmos Connect",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc"
   },
   "dependencies": {
-    "@goblinhunt/cosmes": "latest"
+    "@goblinhunt/cosmes": "latest",
+    "@walletconnect/legacy-client": "^2.0.0"
   },
   "devDependencies": {
     "typescript": "^5.3.3",

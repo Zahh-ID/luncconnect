@@ -1,6 +1,6 @@
-import { WalletAdapter, Chain, Account } from "../core/types.js";
-import { WalletConnectWallet } from "./WalletConnectWallet.js";
-import { WalletName } from "@goblinhunt/cosmes/wallet";
+import { WalletAdapter, Chain, Account } from '../core/types.js';
+import { WalletConnectWallet } from './WalletConnectWallet.js';
+import { WalletName } from '@goblinhunt/cosmes/wallet';
 
 // Basic Station type definitions
 interface Station {
@@ -23,10 +23,10 @@ declare global {
 }
 
 export class StationWallet implements WalletAdapter {
-  id = "station";
-  name = "Station Wallet";
+  id = 'station';
+  name = 'Station Wallet';
   icon =
-    "https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png";
+    'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png';
 
   private wc?: WalletConnectWallet;
 
@@ -38,11 +38,18 @@ export class StationWallet implements WalletAdapter {
         name: this.name,
         icon: this.icon,
         mobileAppDetails: {
-          name: "Station Wallet",
-          description: "Station Wallet (Interchain)",
-          android: "terrastation://wc",
-          ios: "terrastation://wc",
+          name: 'Station Wallet',
+          android: 'terrastation://wc',
+          ios: 'terrastation://wc',
           isStation: true,
+        },
+        signerMetadata: {
+          name: 'LUNCConnect',
+          description: 'Connect to LUNCConnect',
+          url: typeof window !== 'undefined' ? window.location.origin : '',
+          icons: [
+            'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png',
+          ],
         },
       });
     }
@@ -51,11 +58,11 @@ export class StationWallet implements WalletAdapter {
   installed(): boolean {
     // Note: Both Station and Galaxy Station might use window.station.
     // Usually one is installed at a time.
-    return typeof window !== "undefined" && !!window.station;
+    return typeof window !== 'undefined' && !!window.station;
   }
 
   getUri(): string {
-    return this.wc?.getUri() ?? "";
+    return this.wc?.getUri() ?? '';
   }
 
   onUpdate(callback: () => void): void {
@@ -68,7 +75,7 @@ export class StationWallet implements WalletAdapter {
       if (this.wc) {
         return this.wc.connect(chain);
       }
-      throw new Error("Station Wallet extension not found");
+      throw new Error('Station Wallet extension not found');
     }
 
     try {
@@ -95,6 +102,6 @@ export class StationWallet implements WalletAdapter {
   }
 
   async signTx(_bytes: Uint8Array): Promise<Uint8Array> {
-    throw new Error("signTx not implemented for Station Wallet yet.");
+    throw new Error('signTx not implemented for Station Wallet yet.');
   }
 }

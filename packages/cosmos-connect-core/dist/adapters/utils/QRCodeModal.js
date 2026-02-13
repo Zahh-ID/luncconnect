@@ -1,4 +1,4 @@
-import { isAndroid, isMobile } from "./os.js";
+import { isAndroid, isMobile } from './os.js';
 export class QRCodeModal {
     details;
     // Expose URI for external access (monkey-patch hook)
@@ -10,9 +10,9 @@ export class QRCodeModal {
         this.details = details;
     }
     open(uri) {
-        console.log("QRCodeModalStub open called with:", uri);
+        console.log('QRCodeModalStub open called with:', uri);
         // Default behavior is to redirect on mobile
-        if (isMobile() && typeof window !== "undefined") {
+        if (isMobile() && typeof window !== 'undefined') {
             const schemeUri = this.getSchemeUri(uri);
             if (this.details.isStation) {
                 window.location.href = schemeUri;
@@ -26,7 +26,7 @@ export class QRCodeModal {
         }
     }
     close() {
-        console.log("QRCodeModalStub close called");
+        console.log('QRCodeModalStub close called');
     }
     getSchemeUri(uri) {
         return this.details.isStation
@@ -36,15 +36,15 @@ export class QRCodeModal {
             : uri;
     }
     generateAndroidIntent(uri) {
-        const hashIndex = this.details.android.indexOf("#");
+        const hashIndex = this.details.android.indexOf('#');
         if (hashIndex === -1)
             return this.details.android;
         return (this.details.android.slice(0, hashIndex) +
-            "?" +
+            '?' +
             encodeURIComponent(uri) +
             this.details.android.slice(hashIndex));
     }
     generateIosIntent(uri) {
-        return this.details.ios + "?" + encodeURIComponent(uri);
+        return this.details.ios + '?' + encodeURIComponent(uri);
     }
 }

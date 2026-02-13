@@ -1,8 +1,8 @@
 // @ts-nocheck
-import SignClient from "@walletconnect/sign-client";
-import { isAndroid, isMobile } from "./os.js";
-import { MobileAppDetails } from "./QRCodeModal.js";
-import { debounce } from "lodash-es";
+import SignClient from '@walletconnect/sign-client';
+import { isAndroid, isMobile } from './os.js';
+import { MobileAppDetails, SignerMetadata } from './QRCodeModal.js';
+import { debounce } from 'lodash-es';
 
 // Re-defining internal types as they are not exported
 export type GetAccountResponse = {
@@ -34,16 +34,16 @@ export type WalletConnectV2Config = {
 };
 
 const Method = {
-  GET_ACCOUNTS: "cosmos_getAccounts",
-  SIGN_AMINO: "cosmos_signAmino",
-  SIGN_DIRECT: "cosmos_signDirect",
-  SIGN_ARBITRARY: "keplr_signArbitrary",
-  ADD_CHAIN: "keplr_experimentalSuggestChain",
+  GET_ACCOUNTS: 'cosmos_getAccounts',
+  SIGN_AMINO: 'cosmos_signAmino',
+  SIGN_DIRECT: 'cosmos_signDirect',
+  SIGN_ARBITRARY: 'keplr_signArbitrary',
+  ADD_CHAIN: 'keplr_experimentalSuggestChain',
 } as const;
 
 const Event = {
-  CHAIN_CHANGED: "chainChanged",
-  ACCOUNTS_CHANGED: "accountsChanged",
+  CHAIN_CHANGED: 'chainChanged',
+  ACCOUNTS_CHANGED: 'accountsChanged',
 } as const;
 
 const DEFAULT_SIGN_OPTIONS = {
@@ -54,6 +54,7 @@ const DEFAULT_SIGN_OPTIONS = {
 export class WalletConnectV2 {
   private readonly projectId: string;
   private readonly mobileAppDetails: MobileAppDetails;
+  private readonly signerMetadata: SignerMetadata;
   private readonly sessionStorageKey: string;
   private readonly accountStorageKey: string;
   private readonly onDisconnectCbs: Set<() => unknown>;
@@ -65,10 +66,12 @@ export class WalletConnectV2 {
   constructor(
     projectId: string,
     mobileAppDetails: MobileAppDetails,
-    config?: WalletConnectV2Config,
+    signerMetadata: SignerMetadata,
+    config?: WalletConnectV2Config
   ) {
     this.projectId = projectId;
     this.mobileAppDetails = mobileAppDetails;
+    this.signerMetadata = signerMetadata;
     this.sessionStorageKey = `cosmes.wallet.${mobileAppDetails.name.toLowerCase()}.wcSession`;
     this.accountStorageKey = `cosmes.wallet.${mobileAppDetails.name.toLowerCase()}.lastAccount`;
     this.onDisconnectCbs = new Set();
@@ -87,7 +90,7 @@ export class WalletConnectV2 {
 
   async addChain(chainId: string, chainInfo: any): Promise<void> {
     if (!this.signClient) {
-      throw new Error("SignClient is not initialized");
+      throw new Error('SignClient is not initialized');
     }
     await this.request(chainId, Method.ADD_CHAIN, {
       chainInfo,
@@ -97,31 +100,22 @@ export class WalletConnectV2 {
   async connect(chainIds: string[]): Promise<void> {
     // Initialise the sign client and event listeners if they don't already exist
     if (!this.signClient) {
-      console.log("WalletConnectV2: Initializing SignClient...");
+      console.log('WalletConnectV2: Initializing SignClient...');
       try {
         this.signClient = await (SignClient as any).init({
           projectId: this.projectId,
-          relayUrl: "wss://relay.walletconnect.com",
-          metadata: {
-            name: this.mobileAppDetails.name,
-            description: this.mobileAppDetails.description || "Cosmos App",
-            url:
-              this.mobileAppDetails.url ||
-              (typeof window !== "undefined" ? window.location.origin : ""),
-            icons: this.mobileAppDetails.icons || [],
-          },
         });
-        console.log("WalletConnectV2: SignClient initialized");
+        console.log('WalletConnectV2: SignClient initialized');
       } catch (err) {
-        console.error("WalletConnectV2: Failed to initialize SignClient", err);
+        console.error('WalletConnectV2: Failed to initialize SignClient', err);
         throw err;
       }
       // Disconnect if the session is disconnected or expired
-      this.signClient.on("session_delete", ({ topic }: { topic: string }) =>
-        this._disconnect(topic),
+      this.signClient.on('session_delete', ({ topic }: { topic: string }) =>
+        this._disconnect(topic)
       );
-      this.signClient.on("session_expire", ({ topic }: { topic: string }) =>
-        this._disconnect(topic),
+      this.signClient.on('session_expire', ({ topic }: { topic: string }) =>
+        this._disconnect(topic)
       );
       // Handle the `accountsChanged` event
       const handleAccountChange = debounce(
@@ -129,9 +123,9 @@ export class WalletConnectV2 {
         // each connected chain, but we only want to trigger the callback once.
         () => this.onAccountChangeCbs.forEach((cb) => cb()),
         300,
-        { leading: true, trailing: false },
+        { leading: true, trailing: false }
       );
-      this.signClient.on("session_event", ({ params }: { params: any }) => {
+      this.signClient.on('session_event', ({ params }: { params: any }) => {
         if (params.event.name === Event.ACCOUNTS_CHANGED) {
           handleAccountChange();
         }
@@ -145,13 +139,18 @@ export class WalletConnectV2 {
       const { topic, chainIds: storedIds } = JSON.parse(oldSession);
       const storedIdsSet = new Set<string>(storedIds);
       if (chainIds.every((id) => storedIdsSet.has(id))) {
-        // Assume we want a fresh session for the UI to show the QR code
-        // unless explicitly disabled.
         if (this.config?.disableConnectionCheck) {
           return;
         }
-        // Force disconnect old session to ensure a new URI is generated
-        this._disconnect(topic);
+        // If the requested chain IDs are a subset of the stored chain IDs,
+        // check if the session is still working and connected
+        if (await this.isConnected(this.signClient, topic, 4)) {
+          // If the current session is properly connected, return early
+          return;
+        } else {
+          // Otherwise, assume the session is stale and disconnect
+          this._disconnect(topic);
+        }
       } else {
         // Otherwise, we need to merge the stored IDs with the requested IDs
         for (const id of storedIds) {
@@ -161,7 +160,7 @@ export class WalletConnectV2 {
     }
     // Initialise a new session
     const { uri, approval } = await this.signClient!.connect({
-      optionalNamespaces: {
+      requiredNamespaces: {
         cosmos: {
           chains: [...chainIdsSet].map((id) => this.toCosmosNamespace(id)),
           methods: Object.values(Method),
@@ -170,16 +169,16 @@ export class WalletConnectV2 {
       },
     });
     if (uri) {
-      console.log("WalletConnectV2: URI generated", uri);
+      console.log('WalletConnectV2: URI generated', uri);
       this._uri = uri; // Store it locally too
       this.onUriCbs.forEach((cb) => cb(uri));
-      console.log("WalletConnectV2: Waiting for approval...");
+      console.log('WalletConnectV2: Waiting for approval...');
       const approvalPromise = approval();
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(
-          () => reject(new Error("Connection approval timed out")),
-          60000,
-        ),
+          () => reject(new Error('Connection approval timed out')),
+          60000
+        )
       );
 
       const { topic } = await (Promise.race([
@@ -187,7 +186,7 @@ export class WalletConnectV2 {
         timeoutPromise,
       ]) as Promise<{ topic: string }>);
 
-      console.log("WalletConnectV2: Approved session topic", topic);
+      console.log('WalletConnectV2: Approved session topic', topic);
       // Save this new session to local storage
       const newSession = {
         topic,
@@ -227,7 +226,7 @@ export class WalletConnectV2 {
     }
     try {
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out")), 3000),
+        setTimeout(() => reject(new Error('Request timed out')), 3000)
       );
       const resArray: any = await Promise.race([
         this.request(chainId, Method.GET_ACCOUNTS, {}),
@@ -251,7 +250,7 @@ export class WalletConnectV2 {
             const accountData = Array.isArray(res) ? res[0] : res;
             localStorage.setItem(
               this.accountStorageKey,
-              JSON.stringify(accountData),
+              JSON.stringify(accountData)
             );
           })
           .catch(() => {});
@@ -267,12 +266,12 @@ export class WalletConnectV2 {
   async signArbitrary(
     chainId: string,
     signerAddress: string,
-    data: string,
+    data: string
   ): Promise<{ signature: string }> {
     return this.request(chainId, Method.SIGN_ARBITRARY, {
       chainId,
       signer: signerAddress,
-      type: "string",
+      type: 'string',
       data,
     });
   }
@@ -280,7 +279,7 @@ export class WalletConnectV2 {
   async signAmino(
     chainId: string,
     signerAddress: string,
-    stdSignDoc: any,
+    stdSignDoc: any
   ): Promise<SignAminoResponse> {
     const { signature, signed } = await this.request(
       chainId,
@@ -289,7 +288,7 @@ export class WalletConnectV2 {
         signerAddress,
         signDoc: stdSignDoc,
         signOptions: DEFAULT_SIGN_OPTIONS,
-      },
+      }
     );
     return {
       signature: signature,
@@ -300,7 +299,7 @@ export class WalletConnectV2 {
   async signDirect(
     chainId: string,
     signerAddress: string,
-    signDoc: any,
+    signDoc: any
   ): Promise<SignDirectResponse> {
     const { signature, signed } = await this.request(
       chainId,
@@ -309,7 +308,7 @@ export class WalletConnectV2 {
         signerAddress,
         signDoc,
         signOptions: DEFAULT_SIGN_OPTIONS,
-      },
+      }
     );
     return {
       signature: signature,
@@ -320,7 +319,7 @@ export class WalletConnectV2 {
   private isConnected(
     signClient: any,
     topic: string,
-    timeoutSeconds: number,
+    timeoutSeconds: number
   ): Promise<boolean> {
     const tryPing = async () =>
       signClient
@@ -330,13 +329,13 @@ export class WalletConnectV2 {
     const waitDisconnect = async () =>
       new Promise<boolean>((resolve) => {
         // @ts-ignore
-        signClient.on("session_delete", (res) => {
+        signClient.on('session_delete', (res) => {
           if (topic === res.topic) {
             resolve(false);
           }
         });
         // @ts-ignore
-        signClient.on("session_expire", (res) => {
+        signClient.on('session_expire', (res) => {
           if (topic === res.topic) {
             resolve(false);
           }
@@ -344,7 +343,7 @@ export class WalletConnectV2 {
       });
     const timeout = async () =>
       new Promise<boolean>((resolve) =>
-        setTimeout(() => resolve(false), timeoutSeconds * 1000),
+        setTimeout(() => resolve(false), timeoutSeconds * 1000)
       );
     return Promise.race([tryPing(), waitDisconnect(), timeout()]);
   }
@@ -360,11 +359,11 @@ export class WalletConnectV2 {
   private async request(
     chainId: string,
     method: string,
-    params: any,
+    params: any
   ): Promise<any> {
     const session = localStorage.getItem(this.sessionStorageKey);
     if (!session || !this.signClient) {
-      throw new Error("Session not found for " + chainId);
+      throw new Error('Session not found for ' + chainId);
     }
     const { topic } = JSON.parse(session);
     if (isMobile() && method !== Method.GET_ACCOUNTS) {
@@ -383,6 +382,6 @@ export class WalletConnectV2 {
   }
 
   private toCosmosNamespace(chainId: string): string {
-    return "cosmos:" + chainId;
+    return 'cosmos:' + chainId;
   }
 }

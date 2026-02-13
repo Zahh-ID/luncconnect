@@ -15,6 +15,8 @@ export type WalletProps = {
   shouldDeeplinkDesktop?: boolean;
   getWalletConnectDeeplink?: (uri: string) => string;
   downloadUrls?: { [key: string]: string };
+  isStation?: boolean;
+  isLuncDash?: boolean;
 };
 
 export const useWallet = (id: string): WalletProps | null => {
@@ -58,6 +60,8 @@ export const useWallets = (): WalletProps[] => {
       isInstalled: connector.installed(),
       downloadUrls: walletConfig?.downloadUrls,
       getWalletConnectDeeplink: walletConfig?.getWalletConnectDeeplink,
+      isStation: walletConfig?.isStation,
+      isLuncDash: walletConfig?.isLuncDash,
     };
   });
 

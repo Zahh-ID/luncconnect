@@ -41,7 +41,8 @@
   },
   "packageManager": "yarn@3.2.0",
   "dependencies": {
-    "@changesets/cli": "^2.24.4"
+    "@changesets/cli": "^2.24.4",
+    "@goblinhunt/cosmes": "^0.0.71-ghunt.21"
   },
   "resolutions": {
     "webpack-dev-middleware": "5.3.4",

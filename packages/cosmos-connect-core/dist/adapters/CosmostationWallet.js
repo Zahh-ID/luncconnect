@@ -1,9 +1,9 @@
-import { WalletConnectWallet } from "./WalletConnectWallet.js";
-import { WalletName } from "@goblinhunt/cosmes/wallet";
+import { WalletConnectWallet } from './WalletConnectWallet.js';
+import { WalletName } from '@goblinhunt/cosmes/wallet';
 export class CosmostationWallet {
     id = WalletName.COSMOSTATION;
-    name = "Cosmostation";
-    icon = "https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/all_chains/cosmos/resource/cosmostation.png";
+    name = 'Cosmostation';
+    icon = 'https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/all_chains/cosmos/resource/cosmostation.png';
     wc;
     constructor(options) {
         if (options?.projectId) {
@@ -13,19 +13,18 @@ export class CosmostationWallet {
                 name: this.name,
                 icon: this.icon,
                 mobileAppDetails: {
-                    name: "Cosmostation",
-                    description: "Cosmostation Wallet",
-                    android: "intent://wc#Intent;package=wannabit.io.cosmostaion;scheme=cosmostation;end;",
-                    ios: "cosmostation://wc",
+                    name: 'Cosmostation',
+                    android: 'intent://wc#Intent;package=wannabit.io.cosmostaion;scheme=cosmostation;end;',
+                    ios: 'cosmostation://wc',
                 },
             });
         }
     }
     installed() {
-        return typeof window !== "undefined" && !!window.cosmostation;
+        return typeof window !== 'undefined' && !!window.cosmostation;
     }
     getUri() {
-        return this.wc?.getUri() ?? "";
+        return this.wc?.getUri() ?? '';
     }
     onUpdate(callback) {
         this.wc?.onUpdate(callback);
@@ -36,7 +35,7 @@ export class CosmostationWallet {
             if (this.wc) {
                 return this.wc.connect(chain);
             }
-            throw new Error("Cosmostation extension not found");
+            throw new Error('Cosmostation extension not found');
         }
         try {
             await cosmostation.enable(chain.chainId);
@@ -60,9 +59,9 @@ export class CosmostationWallet {
         return Promise.resolve();
     }
     async signTx(_bytes) {
-        throw new Error("signTx not fully implemented for raw bytes in Cosmostation yet.");
+        throw new Error('signTx not fully implemented for raw bytes in Cosmostation yet.');
     }
     async signMsg(_msg) {
-        throw new Error("signMsg not implemented yet.");
+        throw new Error('signMsg not implemented yet.');
     }
 }

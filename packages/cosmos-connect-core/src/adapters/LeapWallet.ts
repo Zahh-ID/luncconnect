@@ -1,6 +1,6 @@
-import { WalletAdapter, Chain, Account } from "../core/types.js";
-import { WalletConnectWallet } from "./WalletConnectWallet.js";
-import { WalletName } from "@goblinhunt/cosmes/wallet";
+import { WalletAdapter, Chain, Account } from '../core/types.js';
+import { WalletConnectWallet } from './WalletConnectWallet.js';
+import { WalletName } from '@goblinhunt/cosmes/wallet';
 
 // Basic Leap type definitions
 interface Leap {
@@ -23,9 +23,9 @@ declare global {
 
 export class LeapWallet implements WalletAdapter {
   id = WalletName.LEAP;
-  name = "Leap";
+  name = 'Leap';
   icon =
-    "https://raw.githubusercontent.com/leapwallet/assets/master/images/leap-cosmos-logo.png";
+    'https://raw.githubusercontent.com/leapwallet/assets/master/images/leap-cosmos-logo.png';
 
   private wc?: WalletConnectWallet;
 
@@ -37,21 +37,20 @@ export class LeapWallet implements WalletAdapter {
         name: this.name,
         icon: this.icon,
         mobileAppDetails: {
-          name: "Leap",
-          description: "Leap Wallet",
-          android: "leapcosmos://wcV2",
-          ios: "leapcosmos://wcV2",
+          name: 'Leap',
+          android: 'leapcosmos://wcV2',
+          ios: 'leapcosmos://wcV2',
         },
       });
     }
   }
 
   installed(): boolean {
-    return typeof window !== "undefined" && !!window.leap;
+    return typeof window !== 'undefined' && !!window.leap;
   }
 
   getUri(): string {
-    return this.wc?.getUri() ?? "";
+    return this.wc?.getUri() ?? '';
   }
 
   onUpdate(callback: () => void): void {
@@ -64,7 +63,7 @@ export class LeapWallet implements WalletAdapter {
       if (this.wc) {
         return this.wc.connect(chain);
       }
-      throw new Error("Leap extension not found");
+      throw new Error('Leap extension not found');
     }
 
     try {
@@ -90,6 +89,6 @@ export class LeapWallet implements WalletAdapter {
   }
 
   async signTx(_bytes: Uint8Array): Promise<Uint8Array> {
-    throw new Error("signTx not implemented for Leap yet.");
+    throw new Error('signTx not implemented for Leap yet.');
   }
 }
