@@ -23,6 +23,8 @@ export declare class LeapWallet implements WalletAdapter {
     constructor(options?: {
         projectId?: string;
     });
+    setProjectId(projectId: string): void;
+    private _initWC;
     installed(): boolean;
     getUri(): string;
     onUpdate(callback: () => void): void;

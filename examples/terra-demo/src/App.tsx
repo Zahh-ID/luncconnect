@@ -26,25 +26,14 @@ const terraTestnet = {
 
 const config = {
   chains: [terraClassic, terraTestnet],
+  walletConnectProjectId: '39190b939e067ecb6dccdb7c77653a42',
   wallets: [
-    new KeplrWallet({
-      projectId: '39190b939e067ecb6dccdb7c77653a42',
-    }),
-    new LeapWallet({
-      projectId: '39190b939e067ecb6dccdb7c77653a42',
-    }),
-    new GalaxyStationWallet({
-      projectId: '39190b939e067ecb6dccdb7c77653a42',
-    }),
-    new StationWallet({
-      projectId: '39190b939e067ecb6dccdb7c77653a42',
-    }),
-    new CosmostationWallet({
-      projectId: '39190b939e067ecb6dccdb7c77653a42',
-    }),
-    new LUNCDashWallet({
-      projectId: '39190b939e067ecb6dccdb7c77653a42',
-    }),
+    new KeplrWallet(),
+    new LeapWallet(),
+    new GalaxyStationWallet(),
+    new StationWallet(),
+    new CosmostationWallet(),
+    new LUNCDashWallet(),
     new WalletConnectWallet({
       projectId: '39190b939e067ecb6dccdb7c77653a42',
     }),
@@ -80,7 +69,7 @@ function App() {
           <ul>
             <li>Exclusively supports Terra Classic</li>
             <li>Prioritizes Keplr Wallet</li>
-            <li>Displays LUNA balances</li>
+            <li>Displays LUNC balances</li>
           </ul>
         </div>
       </div>

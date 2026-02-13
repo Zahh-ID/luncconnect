@@ -32,27 +32,37 @@ export class GalaxyStationWallet implements WalletAdapter {
 
   constructor(options?: { projectId?: string }) {
     if (options?.projectId) {
-      this.wc = new WalletConnectWallet({
-        projectId: options.projectId,
-        id: this.id,
-        name: this.name,
-        icon: this.icon,
-        mobileAppDetails: {
-          name: 'Galaxy Station',
-          android:
-            'https://station.hexxagon.io/wcV2#Intent;package=io.hexxagon.station;scheme=galaxystation;end;',
-          ios: 'https://station.hexxagon.io/wcV2',
-        },
-        signerMetadata: {
-          name: 'LUNCConnect',
-          description: 'Connect to LUNCConnect',
-          url: typeof window !== 'undefined' ? window.location.origin : '',
-          icons: [
-            'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png',
-          ],
-        },
-      });
+      this._initWC(options.projectId);
     }
+  }
+
+  setProjectId(projectId: string) {
+    if (!this.wc) {
+      this._initWC(projectId);
+    }
+  }
+
+  private _initWC(projectId: string) {
+    this.wc = new WalletConnectWallet({
+      projectId,
+      id: this.id,
+      name: this.name,
+      icon: this.icon,
+      mobileAppDetails: {
+        name: 'Galaxy Station',
+        android:
+          'https://station.hexxagon.io/wcV2#Intent;package=io.hexxagon.station;scheme=galaxystation;end;',
+        ios: 'https://station.hexxagon.io/wcV2',
+      },
+      signerMetadata: {
+        name: 'LUNCConnect',
+        description: 'Connect to LUNCConnect',
+        url: typeof window !== 'undefined' ? window.location.origin : '',
+        icons: [
+          'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png',
+        ],
+      },
+    });
   }
 
   installed(): boolean {

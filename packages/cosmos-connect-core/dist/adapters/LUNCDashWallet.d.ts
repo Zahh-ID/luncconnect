@@ -8,9 +8,10 @@ export declare class LUNCDashWallet implements WalletAdapter {
     private _updateCallback?;
     private _connectPromise;
     private _wcInstance;
-    constructor({ projectId }: {
-        projectId: string;
+    constructor(_options?: {
+        projectId?: string;
     });
+    setProjectId(_projectId: string): void;
     installed(): boolean;
     getUri(): string;
     onUpdate(callback: () => void): void;

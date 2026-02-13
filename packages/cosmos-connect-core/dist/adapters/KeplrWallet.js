@@ -7,18 +7,26 @@ export class KeplrWallet {
     wc;
     constructor(options) {
         if (options?.projectId) {
-            this.wc = new WalletConnectWallet({
-                projectId: options.projectId,
-                id: this.id,
-                name: this.name,
-                icon: this.icon,
-                mobileAppDetails: {
-                    name: 'Keplr',
-                    android: 'intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;',
-                    ios: 'keplrwallet://wcV2',
-                },
-            });
+            this._initWC(options.projectId);
         }
+    }
+    setProjectId(projectId) {
+        if (!this.wc) {
+            this._initWC(projectId);
+        }
+    }
+    _initWC(projectId) {
+        this.wc = new WalletConnectWallet({
+            projectId,
+            id: this.id,
+            name: this.name,
+            icon: this.icon,
+            mobileAppDetails: {
+                name: 'Keplr',
+                android: 'intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;',
+                ios: 'keplrwallet://wcV2',
+            },
+        });
     }
     installed() {
         return typeof window !== 'undefined' && !!window.keplr;

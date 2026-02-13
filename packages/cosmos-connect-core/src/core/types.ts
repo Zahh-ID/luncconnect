@@ -28,6 +28,7 @@ export interface WalletAdapter {
   signMsg?(msg: string): Promise<Uint8Array>;
   getUri?(): string;
   onUpdate?(callback: () => void): void;
+  setProjectId?(projectId: string): void;
 }
 
 export type ClientStatus = 'disconnected' | 'connecting' | 'connected';
@@ -42,6 +43,7 @@ export interface ClientState {
 export interface ClientConfig {
   chains: Chain[];
   wallets: WalletAdapter[];
+  walletConnectProjectId?: string;
   storage?: StorageAdapter;
 }
 

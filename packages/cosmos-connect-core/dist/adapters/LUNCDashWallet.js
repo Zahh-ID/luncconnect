@@ -11,7 +11,7 @@ export class LUNCDashWallet {
     _updateCallback;
     _connectPromise = null;
     _wcInstance = null;
-    constructor({ projectId }) {
+    constructor(_options) {
         this.wc = new WalletConnectV1('cosmes.wallet.luncdash.wcSession', {
             name: 'LUNCDash',
             android: 'luncdash://wallet_connect',
@@ -24,6 +24,8 @@ export class LUNCDashWallet {
             this._updateCallback?.();
         });
     }
+    // LUNCDash uses V1, projectId not needed
+    setProjectId(_projectId) { }
     installed() {
         return false; // LUNCDash is mobile-only
     }

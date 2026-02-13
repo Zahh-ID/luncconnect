@@ -7,18 +7,26 @@ export class CosmostationWallet {
     wc;
     constructor(options) {
         if (options?.projectId) {
-            this.wc = new WalletConnectWallet({
-                projectId: options.projectId,
-                id: this.id,
-                name: this.name,
-                icon: this.icon,
-                mobileAppDetails: {
-                    name: 'Cosmostation',
-                    android: 'intent://wc#Intent;package=wannabit.io.cosmostaion;scheme=cosmostation;end;',
-                    ios: 'cosmostation://wc',
-                },
-            });
+            this._initWC(options.projectId);
         }
+    }
+    setProjectId(projectId) {
+        if (!this.wc) {
+            this._initWC(projectId);
+        }
+    }
+    _initWC(projectId) {
+        this.wc = new WalletConnectWallet({
+            projectId,
+            id: this.id,
+            name: this.name,
+            icon: this.icon,
+            mobileAppDetails: {
+                name: 'Cosmostation',
+                android: 'intent://wc#Intent;package=wannabit.io.cosmostaion;scheme=cosmostation;end;',
+                ios: 'cosmostation://wc',
+            },
+        });
     }
     installed() {
         return typeof window !== 'undefined' && !!window.cosmostation;

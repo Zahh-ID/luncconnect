@@ -1,6 +1,6 @@
 {
   "name": "cosmos-connect-core",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Core SDK for Cosmos Connect",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

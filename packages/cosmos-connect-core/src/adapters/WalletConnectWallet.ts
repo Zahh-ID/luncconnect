@@ -57,6 +57,9 @@ export class WalletConnectWallet implements WalletAdapter {
     });
   }
 
+  // projectId is set at construction for WalletConnectWallet
+  setProjectId(_projectId: string) {}
+
   installed(): boolean {
     return false;
   }

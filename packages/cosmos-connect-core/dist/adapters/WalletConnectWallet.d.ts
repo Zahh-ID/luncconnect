@@ -17,6 +17,7 @@ export declare class WalletConnectWallet implements WalletAdapter {
         mobileAppDetails?: MobileAppDetails;
         signerMetadata?: SignerMetadata;
     });
+    setProjectId(_projectId: string): void;
     installed(): boolean;
     getUri(): string;
     private _connectPromise;

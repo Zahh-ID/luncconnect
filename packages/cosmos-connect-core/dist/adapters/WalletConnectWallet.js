@@ -34,6 +34,8 @@ export class WalletConnectWallet {
             this._updateCallback?.();
         });
     }
+    // projectId is set at construction for WalletConnectWallet
+    setProjectId(_projectId) { }
     installed() {
         return false;
     }

@@ -1,6 +1,10 @@
 # LUNCConnect
 
-LUNCConnect is a powerful [React](https://reactjs.org/) component library for connecting Cosmos wallets to your dApp. Built specifically for Terra Classic (LUNC) and Cosmos ecosystem, it provides a beautiful, seamless wallet connection experience. forked from [ConnectKit](https://github.com/family/connectkit)
+LUNCConnect is a powerful [React](https://reactjs.org/) component library for connecting Cosmos wallets to your dApp. Built specifically for Terra Classic (LUNC) and Cosmos ecosystem, it provides a beautiful, seamless wallet connection experience. Forked from [ConnectKit](https://github.com/family/connectkit).
+
+## 🔗 Live Demo
+
+**[Try it live →](https://zahh-id.github.io/luncconnect/)**
 
 ## Features
 
@@ -9,7 +13,7 @@ LUNCConnect is a powerful [React](https://reactjs.org/) component library for co
 - 🔌 **Multiple Wallets** — Supports Keplr, Leap, Cosmostation, Station, LUNCDash, and more.
 - 🖥️ **Simple UX** — Give users a simple, attractive experience.
 - 🎨 **Beautiful Themes** — Predesigned themes or full customization.
-- 📱 **Mobile Support** — Deep linking for mobile wallet apps.
+- 📱 **Mobile Support** — Deep linking and WalletConnect for mobile wallet apps.
 
 ## Quick Start
 
@@ -36,14 +40,14 @@ pnpm dlx create-react-app ./my-app --template luncconnect
 ## Installation
 
 ```sh
-npm install LUNCConnect @yourorg/cosmos-connect-core @yourorg/cosmos-connect-react
+npm install luncconnect cosmos-connect-core cosmos-connect-react
 ```
 
 ## Basic Usage
 
 ```tsx
-import { ConnectKitProvider, ConnectKitButton } from 'LUNCConnect';
-import { KeplrWallet, LeapWallet } from '@yourorg/cosmos-connect-core';
+import { ConnectKitProvider, ConnectKitButton } from 'luncconnect';
+import { KeplrWallet, LeapWallet, LUNCDashWallet } from 'cosmos-connect-core';
 
 const terraClassic = {
   chainId: 'columbus-5',
@@ -54,7 +58,8 @@ const terraClassic = {
 
 const config = {
   chains: [terraClassic],
-  wallets: [new KeplrWallet(), new LeapWallet()],
+  walletConnectProjectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // from https://cloud.walletconnect.com
+  wallets: [new KeplrWallet(), new LeapWallet(), new LUNCDashWallet()],
 };
 
 function App() {
@@ -66,13 +71,16 @@ function App() {
 }
 ```
 
+> **Note:** Get your WalletConnect Project ID from [WalletConnect Cloud](https://cloud.walletconnect.com/).
+> Set it once in `walletConnectProjectId` and it will be automatically passed to all wallets.
+
 ## Supported Wallets
 
 - **Keplr** - Browser extension and mobile app
 - **Leap** - Browser extension and mobile app
 - **Cosmostation** - Browser extension and mobile app
 - **Station** - Terra's official wallet
-- **LUNCDash** - LUNC-focused wallet
+- **LUNCDash** - LUNC-focused wallet (WalletConnect V1)
 - **Galaxy Station** - Alternative Station wallet
 
 ## License

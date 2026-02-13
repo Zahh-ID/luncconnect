@@ -2,6 +2,10 @@
 
 React hooks and context provider for Cosmos wallet management. Built on top of `cosmos-connect-core`.
 
+## 🔗 Live Demo
+
+**[Try it live →](https://zahh-id.github.io/luncconnect/)**
+
 ## Installation
 
 ```bash
@@ -25,6 +29,7 @@ const terraClassic = {
 
 const config = {
   chains: [terraClassic],
+  walletConnectProjectId: 'YOUR_PROJECT_ID', // from https://cloud.walletconnect.com
   wallets: [new KeplrWallet(), new LeapWallet()],
 };
 

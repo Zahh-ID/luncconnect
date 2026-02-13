@@ -33,19 +33,29 @@ export class KeplrWallet implements WalletAdapter {
 
   constructor(options?: { projectId?: string }) {
     if (options?.projectId) {
-      this.wc = new WalletConnectWallet({
-        projectId: options.projectId,
-        id: this.id,
-        name: this.name,
-        icon: this.icon,
-        mobileAppDetails: {
-          name: 'Keplr',
-          android:
-            'intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;',
-          ios: 'keplrwallet://wcV2',
-        },
-      });
+      this._initWC(options.projectId);
     }
+  }
+
+  setProjectId(projectId: string) {
+    if (!this.wc) {
+      this._initWC(projectId);
+    }
+  }
+
+  private _initWC(projectId: string) {
+    this.wc = new WalletConnectWallet({
+      projectId,
+      id: this.id,
+      name: this.name,
+      icon: this.icon,
+      mobileAppDetails: {
+        name: 'Keplr',
+        android:
+          'intent://wcV2#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;',
+        ios: 'keplrwallet://wcV2',
+      },
+    });
   }
 
   installed(): boolean {

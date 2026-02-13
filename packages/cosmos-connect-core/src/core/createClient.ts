@@ -6,21 +6,30 @@ import {
   StorageAdapter,
   WalletAdapter,
   Listener,
-} from "./types.js";
-import { defaultStorage } from "./storage.js";
+} from './types.js';
+import { defaultStorage } from './storage.js';
 
-const STORAGE_KEY_CHAIN = "cosmos-connect.chain";
-const STORAGE_KEY_WALLET = "cosmos-connect.wallet";
+const STORAGE_KEY_CHAIN = 'cosmos-connect.chain';
+const STORAGE_KEY_WALLET = 'cosmos-connect.wallet';
 
 export function createClient(config: ClientConfig): Client {
   const { chains, wallets } = config;
   const storage: StorageAdapter = config.storage || defaultStorage;
 
+  // Propagate global walletConnectProjectId to all wallets
+  if (config.walletConnectProjectId) {
+    wallets.forEach((w) => {
+      if (w.setProjectId) {
+        w.setProjectId(config.walletConnectProjectId!);
+      }
+    });
+  }
+
   let state: ClientState = {
     currentChain: null,
     currentWallet: null,
     account: null,
-    status: "disconnected",
+    status: 'disconnected',
   };
 
   const listeners = new Set<Listener<ClientState>>();
@@ -46,7 +55,7 @@ export function createClient(config: ClientConfig): Client {
       const wallet = getWallet(walletId);
       if (!wallet) throw new Error(`Wallet ${walletId} not found`);
 
-      setState({ status: "connecting" });
+      setState({ status: 'connecting' });
 
       if (!wallet.installed() && !wallet.getUri) {
         throw new Error(`Wallet ${wallet.name} is not installed`);
@@ -58,13 +67,13 @@ export function createClient(config: ClientConfig): Client {
         currentChain: chain,
         currentWallet: wallet,
         account,
-        status: "connected",
+        status: 'connected',
       });
 
       storage.setItem(STORAGE_KEY_CHAIN, chainId);
       storage.setItem(STORAGE_KEY_WALLET, walletId);
     } catch (error) {
-      setState({ status: "disconnected", account: null });
+      setState({ status: 'disconnected', account: null });
       throw error;
     }
   }
@@ -74,7 +83,7 @@ export function createClient(config: ClientConfig): Client {
       try {
         await state.currentWallet.disconnect();
       } catch (e) {
-        console.error("Wallet disconnect failed", e);
+        console.error('Wallet disconnect failed', e);
       }
     }
 
@@ -82,7 +91,7 @@ export function createClient(config: ClientConfig): Client {
       currentChain: null,
       currentWallet: null,
       account: null,
-      status: "disconnected",
+      status: 'disconnected',
     });
 
     storage.removeItem(STORAGE_KEY_CHAIN);
@@ -91,7 +100,7 @@ export function createClient(config: ClientConfig): Client {
 
   async function signAndBroadcast(txBytes: Uint8Array): Promise<string> {
     if (!state.currentChain || !state.currentWallet || !state.account) {
-      throw new Error("Client not connected");
+      throw new Error('Client not connected');
     }
 
     // 1. Sign
@@ -154,7 +163,7 @@ export function createClient(config: ClientConfig): Client {
 
 // Browser-compatible base64 encoding
 function toBase64(bytes: Uint8Array): string {
-  let binary = "";
+  let binary = '';
   const len = bytes.byteLength;
   for (let i = 0; i < len; i++) {
     binary += String.fromCharCode(bytes[i]);
@@ -165,20 +174,20 @@ function toBase64(bytes: Uint8Array): string {
 async function broadcastTx(rpc: string, signedTx: Uint8Array): Promise<string> {
   const txBytesBase64 = toBase64(signedTx);
   const body = {
-    jsonrpc: "2.0",
-    id: "1",
-    method: "broadcast_tx_sync",
+    jsonrpc: '2.0',
+    id: '1',
+    method: 'broadcast_tx_sync',
     params: {
       tx: txBytesBase64,
     },
   };
 
-  if (typeof fetch === "undefined") {
-    throw new Error("Fetch is not defined in this environment");
+  if (typeof fetch === 'undefined') {
+    throw new Error('Fetch is not defined in this environment');
   }
 
   const res = await fetch(rpc, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(body),
   });
 

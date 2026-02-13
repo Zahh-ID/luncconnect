@@ -49,6 +49,7 @@ export const CosmosProvider: React.FC<CosmosProviderProps> = ({
     const fullConfig: ClientConfig = {
       chains: config?.chains || DEFAULT_CONFIG.chains,
       wallets: config?.wallets || DEFAULT_CONFIG.wallets,
+      walletConnectProjectId: config?.walletConnectProjectId,
       storage: config?.storage || DEFAULT_CONFIG.storage,
     };
     return createClient(fullConfig);

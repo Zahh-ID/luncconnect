@@ -6,26 +6,34 @@ export class GalaxyStationWallet {
     wc;
     constructor(options) {
         if (options?.projectId) {
-            this.wc = new WalletConnectWallet({
-                projectId: options.projectId,
-                id: this.id,
-                name: this.name,
-                icon: this.icon,
-                mobileAppDetails: {
-                    name: 'Galaxy Station',
-                    android: 'https://station.hexxagon.io/wcV2#Intent;package=io.hexxagon.station;scheme=galaxystation;end;',
-                    ios: 'https://station.hexxagon.io/wcV2',
-                },
-                signerMetadata: {
-                    name: 'LUNCConnect',
-                    description: 'Connect to LUNCConnect',
-                    url: typeof window !== 'undefined' ? window.location.origin : '',
-                    icons: [
-                        'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png',
-                    ],
-                },
-            });
+            this._initWC(options.projectId);
         }
+    }
+    setProjectId(projectId) {
+        if (!this.wc) {
+            this._initWC(projectId);
+        }
+    }
+    _initWC(projectId) {
+        this.wc = new WalletConnectWallet({
+            projectId,
+            id: this.id,
+            name: this.name,
+            icon: this.icon,
+            mobileAppDetails: {
+                name: 'Galaxy Station',
+                android: 'https://station.hexxagon.io/wcV2#Intent;package=io.hexxagon.station;scheme=galaxystation;end;',
+                ios: 'https://station.hexxagon.io/wcV2',
+            },
+            signerMetadata: {
+                name: 'LUNCConnect',
+                description: 'Connect to LUNCConnect',
+                url: typeof window !== 'undefined' ? window.location.origin : '',
+                icons: [
+                    'https://raw.githubusercontent.com/terra-money/station-assets/main/img/station.png',
+                ],
+            },
+        });
     }
     installed() {
         return typeof window !== 'undefined' && !!window.galaxyStation;

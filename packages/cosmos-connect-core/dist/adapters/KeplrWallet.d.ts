@@ -25,6 +25,8 @@ export declare class KeplrWallet implements WalletAdapter {
     constructor(options?: {
         projectId?: string;
     });
+    setProjectId(projectId: string): void;
+    private _initWC;
     installed(): boolean;
     getUri(): string;
     onUpdate(callback: () => void): void;

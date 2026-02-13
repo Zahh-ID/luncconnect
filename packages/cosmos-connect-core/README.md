@@ -1,6 +1,10 @@
 # cosmos-connect-core
 
-Core SDK for Cosmos wallet integration. Provides wallet adapters for Keplr, Leap, Cosmostation, Station, and more.
+Core SDK for Cosmos wallet integration. Provides wallet adapters for Keplr, Leap, Cosmostation, Station, LUNCDash, and more.
+
+## 🔗 Live Demo
+
+**[Try it live →](https://zahh-id.github.io/luncconnect/)**
 
 ## Installation
 
@@ -15,28 +19,33 @@ npm install cosmos-connect-core
 - **CosmostationWallet** - Browser extension and mobile app
 - **StationWallet** - Terra's official wallet
 - **GalaxyStationWallet** - Alternative Station wallet
-- **LUNCDashWallet** - LUNC-focused wallet
+- **LUNCDashWallet** - LUNC-focused wallet (WalletConnect V1)
 - **WalletConnectWallet** - WalletConnect v2 support
 
 ## Usage
 
 ```typescript
-import { KeplrWallet, LeapWallet } from 'cosmos-connect-core';
+import { createClient, KeplrWallet, LeapWallet } from 'cosmos-connect-core';
 
-const keplr = new KeplrWallet();
-const leap = new LeapWallet();
-
-// Connect wallet
-await keplr.connect({
-  chainId: 'columbus-5',
-  rpc: 'https://terra-classic-rpc.publicnode.com',
-  rest: 'https://terra-classic-lcd.publicnode.com',
+const client = createClient({
+  chains: [
+    {
+      chainId: 'columbus-5',
+      rpc: 'https://terra-classic-rpc.publicnode.com',
+      rest: 'https://terra-classic-lcd.publicnode.com',
+      bech32Prefix: 'terra',
+    },
+  ],
+  walletConnectProjectId: 'YOUR_PROJECT_ID', // from https://cloud.walletconnect.com
+  wallets: [new KeplrWallet(), new LeapWallet()],
 });
 
-// Get account
-const account = await keplr.getAccount('columbus-5');
-console.log(account.address); // terra1...
+// Connect wallet
+await client.connect('keplr', 'columbus-5');
+console.log(client.state.account?.address); // terra1...
 ```
+
+> **Note:** Set `walletConnectProjectId` once in the config — it will be automatically passed to all wallets that support WalletConnect.
 
 ## Supported Chains
 
