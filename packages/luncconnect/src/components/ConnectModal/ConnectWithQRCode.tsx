@@ -46,26 +46,64 @@ const ConnectWithQRCode: React.FC<{
     }
   }, [deeplink]);
 
+  const [error, setError] = React.useState<null | 'timeout'>(null);
+
+  const triggerConnect = React.useCallback(async () => {
+    try {
+      setError(null);
+      // Trigger the specific wallet's connection logic.
+      // Since it's not installed (otherwise we wouldn't be on this page),
+      // the adapter will fallback to its internal WalletConnect instance.
+      await connect(id);
+    } catch (e: any) {
+      console.error(`Failed to initiate connection for ${id}:`, e);
+      if (
+        e?.message?.includes('timeout') ||
+        e?.message?.includes('expired') ||
+        e?.message?.includes('pairing')
+      ) {
+        setError('timeout');
+      }
+    }
+  }, [id, connect]);
+
   useEffect(() => {
     if (!wcUri) {
-      const triggerConnect = async () => {
-        try {
-          // Trigger the specific wallet's connection logic.
-          // Since it's not installed (otherwise we wouldn't be on this page),
-          // the adapter will fallback to its internal WalletConnect instance.
-          await connect(id);
-        } catch (e) {
-          console.error(`Failed to initiate connection for ${id}:`, e);
-        }
-      };
       triggerConnect();
     }
-  }, [id, wcUri, connect]);
+  }, [id, wcUri, triggerConnect]);
 
   if (!wallet) return <>Wallet not found {id}</>;
 
   const downloads = (wallet as any)?.downloadUrls;
   const hasApps = downloads && Object.keys(downloads).length !== 0;
+
+  if (error === 'timeout') {
+    return (
+      <PageContent>
+        <ModalContent
+          style={{
+            paddingBottom: 8,
+            gap: 14,
+            minHeight: 300,
+            justifyContent: 'center',
+          }}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <h1 style={{ fontSize: 20, marginBottom: 8 }}>
+              {locales.scanScreen_timeout_h1}
+            </h1>
+            <p style={{ opacity: 0.6, fontSize: 14, lineHeight: '1.4' }}>
+              {locales.scanScreen_timeout_p}
+            </p>
+          </div>
+          <Button onClick={triggerConnect}>
+            {locales.scanScreen_refresh_button}
+          </Button>
+        </ModalContent>
+      </PageContent>
+    );
+  }
 
   return (
     <PageContent>

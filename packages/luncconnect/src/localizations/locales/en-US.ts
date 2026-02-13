@@ -96,6 +96,9 @@ const enUS = {
 
   injectionScreen_failed_h1: `Connection Failed`,
   injectionScreen_failed_p: `Sorry, something went wrong.\nPlease try connecting again.`,
+  scanScreen_timeout_h1: `Connection Timed Out`,
+  scanScreen_timeout_p: `The connection request expired. Please refresh the QR code to try again.`,
+  scanScreen_refresh_button: `Refresh QR Code`,
 
   injectionScreen_notconnected_h1: `Login to {{ CONNECTORNAME }}`,
   injectionScreen_notconnected_p: `To continue, please login to your {{ CONNECTORNAME }} extension.`,

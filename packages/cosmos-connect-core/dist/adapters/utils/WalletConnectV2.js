@@ -127,7 +127,7 @@ export class WalletConnectV2 {
                 console.log(`WalletConnectV2: URI generated (attempt ${attempt + 1}/${maxRetries})`, uri);
                 this._uri = uri;
                 this.onUriCbs.forEach((cb) => cb(uri));
-                console.log('WalletConnectV2: Waiting for approval...');
+                console.log(`WalletConnectV2: Waiting for approval (timeout: ${pairingTimeout}ms)...`);
                 try {
                     const approvalPromise = approval();
                     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection approval timed out')), pairingTimeout));
@@ -144,9 +144,10 @@ export class WalletConnectV2 {
                     return; // Successfully connected
                 }
                 catch (err) {
-                    if (err?.message === 'Connection approval timed out' &&
-                        attempt < maxRetries - 1) {
-                        console.log(`WalletConnectV2: Timed out, regenerating QR code (attempt ${attempt + 2}/${maxRetries})...`);
+                    const isRetryable = err?.message === 'Connection approval timed out' ||
+                        err?.message === 'Proposal expired';
+                    if (isRetryable && attempt < maxRetries - 1) {
+                        console.log(`WalletConnectV2: ${err.message}, regenerating QR code (attempt ${attempt + 2}/${maxRetries})...`);
                         continue; // Retry with a new URI
                     }
                     throw err;
