@@ -1,53 +1,37 @@
-import { createElement, createContext, useContext, useState } from 'react';
+import { createElement, createContext, useContext } from 'react';
 import { TestBenchProvider } from '../TestbenchProvider';
 
-import { getDefaultConfig, wallets } from 'connectkit';
-
-import { WagmiProvider, createConfig } from 'wagmi';
-import { defineChain, type Chain, http } from 'viem';
+import { ConnectKitProvider } from 'luncconnect';
+import { CosmosProvider } from 'cosmos-connect-react';
+import {
+  KeplrWallet,
+  LeapWallet,
+  GalaxyStationWallet,
+} from 'cosmos-connect-core';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { mainnet } from 'viem/chains';
 
-const avalanche: Chain = defineChain({
-  id: 43_114,
-  name: 'Avalanche',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Avalanche',
-    symbol: 'AVAX',
-  },
-  rpcUrls: {
-    default: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
-  },
-  blockExplorers: {
-    default: { name: 'SnowTrace', url: 'https://snowtrace.io' },
-    snowtrace: { name: 'SnowTrace', url: 'https://snowtrace.io' },
-  },
-  testnet: false,
-});
-
-export const ckConfig = getDefaultConfig({
-  /*
-  chains: [
-    mainnet,
-    //avalanche
-  ],
-  transports: {
-    [mainnet.id]: http(mainnet.rpcUrls.default.http[0]),
-    //[avalanche.id]: http(avalanche.rpcUrls.default.http[0]),
-  },
-  */
-  appName: 'ConnectKit testbench',
-  appIcon: '/app.png',
-  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-  //enableFamily: false,
-});
-const customConfig = {
-  ...ckConfig,
-  connectors: [wallets['rainbow'], ...(ckConfig.connectors ?? [])],
+const terraClassic = {
+  chainId: 'columbus-5',
+  rpc: 'https://terra-classic-rpc.publicnode.com',
+  rest: 'https://terra-classic-lcd.publicnode.com',
+  bech32Prefix: 'terra',
 };
-const config = createConfig(ckConfig);
+
+export const config = {
+  chains: [terraClassic],
+  wallets: [
+    new KeplrWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new LeapWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new GalaxyStationWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+  ],
+};
 
 const queryClient = new QueryClient();
 
@@ -59,15 +43,11 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return createElement(
     Context.Provider,
     { value: {} },
-    <WagmiProvider config={config}>
+    <CosmosProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <TestBenchProvider
-        //customTheme={{ '--ck-font-family': 'monospace' }}
-        >
-          {children}
-        </TestBenchProvider>
+        <TestBenchProvider>{children}</TestBenchProvider>
       </QueryClientProvider>
-    </WagmiProvider>
+    </CosmosProvider>
   );
 };
 

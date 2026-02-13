@@ -1,19 +1,19 @@
 'use client';
 
+import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { type ReactNode } from 'react';
-import { WagmiProvider } from 'wagmi';
-
+import { ConnectKitProvider } from 'luncconnect';
+import { CosmosProvider } from 'cosmos-connect-react';
 import { config } from '../config';
-import { ConnectKitProvider } from 'connectkit';
 
 const queryClient = new QueryClient();
-export function Providers(props: { children: ReactNode }) {
+
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={config}>
+    <CosmosProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>{props.children}</ConnectKitProvider>
+        <ConnectKitProvider>{children}</ConnectKitProvider>
       </QueryClientProvider>
-    </WagmiProvider>
+    </CosmosProvider>
   );
 }

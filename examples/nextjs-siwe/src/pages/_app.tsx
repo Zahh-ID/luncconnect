@@ -1,24 +1,41 @@
 import '@/styles/globals.css';
-import { siweClient } from '@/utils/siweClient';
-import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
+import { ConnectKitProvider } from 'luncconnect';
+import { CosmosProvider } from 'cosmos-connect-react';
 import type { AppProps } from 'next/app';
-import { WagmiProvider, createConfig } from 'wagmi';
+import {
+  KeplrWallet,
+  LeapWallet,
+  GalaxyStationWallet,
+} from 'cosmos-connect-core';
 
-const config = createConfig(
-  getDefaultConfig({
-    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-    appName: 'My ConnectKit App',
-  })
-);
+const terraClassic = {
+  chainId: 'columbus-5',
+  rpc: 'https://terra-classic-rpc.publicnode.com',
+  rest: 'https://terra-classic-lcd.publicnode.com',
+  bech32Prefix: 'terra',
+};
+
+const config = {
+  chains: [terraClassic],
+  wallets: [
+    new KeplrWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new LeapWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new GalaxyStationWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+  ],
+};
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiProvider config={config}>
-      <siweClient.Provider>
-        <ConnectKitProvider>
-          <Component {...pageProps} />
-        </ConnectKitProvider>
-      </siweClient.Provider>
-    </WagmiProvider>
+    <CosmosProvider config={config}>
+      <ConnectKitProvider>
+        <Component {...pageProps} />
+      </ConnectKitProvider>
+    </CosmosProvider>
   );
 }

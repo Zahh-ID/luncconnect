@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.17.10",
-    "connectkit": "workspace:packages/connectkit",
+    "luncconnect": "*",
+    "cosmos-connect-react": "*",
+    "cosmos-connect-core": "*",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "viem": "^2.23.2",
-    "wagmi": "^2.14.11"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",

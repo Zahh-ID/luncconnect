@@ -9,19 +9,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@yourorg/cosmos-connect-react": "*",
-    "@yourorg/cosmos-connect-core": "*",
     "connectkit": "*",
+    "cosmos-connect-core": "*",
+    "cosmos-connect-react": "*",
+    "framer-motion": "^6.3.11",
+    "luncconnect": "^1.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^5.3.5",
-    "framer-motion": "^6.3.11"
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@vitejs/plugin-react": "^2.1.0",
+    "@vitejs/plugin-react": "^5.1.4",
     "typescript": "^5.0.4",
-    "vite": "^3.1.0"
+    "vite": "^7.3.1"
   }
 }

@@ -1,24 +1,44 @@
 import React from 'react';
 
-import { WagmiProvider, createConfig } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
+import { ConnectKitProvider } from 'luncconnect';
+import { CosmosProvider } from 'cosmos-connect-react';
+import {
+  KeplrWallet,
+  LeapWallet,
+  GalaxyStationWallet,
+} from 'cosmos-connect-core';
 
-const config = createConfig(
-  getDefaultConfig({
-    appName: 'ConnectKit CRA demo',
-    walletConnectProjectId: process.env.REACT_APP_WALLETCONNECT_PROJECT_ID!,
-  })
-);
+const terraClassic = {
+  chainId: 'columbus-5',
+  rpc: 'https://terra-classic-rpc.publicnode.com',
+  rest: 'https://terra-classic-lcd.publicnode.com',
+  bech32Prefix: 'terra',
+};
+
+const config = {
+  chains: [terraClassic],
+  wallets: [
+    new KeplrWallet({
+      projectId: process.env.REACT_APP_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new LeapWallet({
+      projectId: process.env.REACT_APP_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new GalaxyStationWallet({
+      projectId: process.env.REACT_APP_WALLETCONNECT_PROJECT_ID!,
+    }),
+  ],
+};
 
 const queryClient = new QueryClient();
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <WagmiProvider config={config}>
+    <CosmosProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider debugMode>{children}</ConnectKitProvider>
+        <ConnectKitProvider>{children}</ConnectKitProvider>
       </QueryClientProvider>
-    </WagmiProvider>
+    </CosmosProvider>
   );
 };

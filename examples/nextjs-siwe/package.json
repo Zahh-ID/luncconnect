@@ -9,14 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "connectkit": "workspace:packages/connectkit",
-    "connectkit-next-siwe": "workspace:packages/connectkit-next-siwe",
+    "luncconnect": "*",
+    "cosmos-connect-react": "*",
+    "cosmos-connect-core": "*",
     "next": "14.2.32",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "siwe": "^2.1.4",
-    "viem": "^2.23.2",
-    "wagmi": "^2.14.11"
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@types/node": "18.7.18",

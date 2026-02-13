@@ -10,14 +10,13 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.17.10",
-    "connectkit": "workspace:packages/connectkit",
-    "connectkit-next-siwe": "workspace:packages/connectkit-next-siwe",
+    "luncconnect": "*",
+    "cosmos-connect-react": "*",
+    "cosmos-connect-core": "*",
     "local-ssl-proxy": "^1.3.0",
     "next": "14.2.32",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "viem": "^2.23.2",
-    "wagmi": "^2.14.11"
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@types/node": "18.7.18",

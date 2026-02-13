@@ -6,129 +6,45 @@ import {
   Types,
   ConnectKitButton,
   Avatar,
-  SIWEButton,
   ChainIcon,
-  SIWESession,
-  useChains,
   useModal,
-  useSIWE,
-} from 'connectkit';
+} from 'luncconnect';
 
-import {
-  useAccount,
-  useBalance,
-  useSendTransaction,
-  useSignMessage,
-  useSignTypedData,
-  useConnect,
-  useDisconnect,
-} from 'wagmi';
-import * as wagmiChains from 'wagmi/chains';
+import { useAccount, useConnect, useDisconnect } from 'cosmos-connect-react';
 
 import { useTestBench } from '../TestbenchProvider';
 import { Checkbox, Textbox, Select, SelectProps } from '../components/inputs';
 
 import CustomAvatar from '../components/CustomAvatar';
-import CustomSIWEButton from '../components/CustomSIWEButton';
-import { Address } from 'viem';
 
-const allChains = Object.keys(wagmiChains).map(
-  (key) => wagmiChains[key as keyof typeof wagmiChains]
-);
-
-/** TODO: import this data from the connectkit module */
-const themes: SelectProps[] = [
-  { label: 'Auto', value: 'auto' },
-  { label: 'Web95', value: 'web95' },
-  { label: 'Retro', value: 'retro' },
-  { label: 'Soft', value: 'soft' },
-  { label: 'Minimal', value: 'minimal' },
-  { label: 'Rounded', value: 'rounded' },
-  { label: 'Midnight', value: 'midnight' },
-  { label: 'Nouns', value: 'nouns' },
-];
-const modes: SelectProps[] = [
-  { label: 'Auto', value: 'auto' },
-  { label: 'Light', value: 'light' },
-  { label: 'Dark', value: 'dark' },
-];
 const languages: SelectProps[] = [
   { label: 'English (US)', value: 'en-US' },
-  { label: 'Arabic', value: 'ar-AE' },
-  { label: 'Catalan', value: 'ca-AD' },
   { label: 'Chinese', value: 'zh-CN' },
-  { label: 'Estonian', value: 'ee-EE' },
-  { label: 'French', value: 'fr-FR' },
-  { label: 'Japanese', value: 'ja-JP' },
-  { label: 'Persian', value: 'fa-IR' },
-  { label: 'Portuguese', value: 'pt-BR' },
-  { label: 'Russian', value: 'ru-RU' },
-  { label: 'Spanish', value: 'es-ES' },
-  { label: 'Turkish', value: 'tr-TR' },
-  { label: 'Vietnamese', value: 'vi-VN' },
 ];
 
 const AccountInfo = () => {
-  const {
-    address,
-    connector,
-    isConnected,
-    isConnecting,
-    isDisconnected,
-    isReconnecting,
-  } = useAccount();
-  const { data: balanceData } = useBalance({ address });
-  const { chain } = useAccount();
-  const chains = useChains();
-
-  const { isSignedIn, signOut } = useSIWE({
-    onSignIn: (data?: SIWESession) => {
-      console.log('onSignIn', data);
-    },
-    onSignOut: () => {
-      console.log('onSignOut');
-    },
-  });
+  const { address, wallet, isConnected, isConnecting, isDisconnected } =
+    useAccount();
 
   return (
     <div className="panel">
       <h2>Wallet Info</h2>
       {isConnecting && <p>Connecting...</p>}
-      {isReconnecting && <p>Reconnecting...</p>}
       {isDisconnected && <p>Disconnected</p>}
       {isConnected && (
         <table>
           <tbody>
             <tr>
-              <td>Chain ID</td>
-              <td>{chain?.id}</td>
-            </tr>
-            <tr>
-              <td>Chain Name</td>
-              <td>{chain?.name}</td>
-            </tr>
-            <tr>
-              <td>Chain Supported</td>
-              <td>{chains.some((x) => x.id === chain?.id) ? 'Yes' : 'No'}</td>
+              <td>Network</td>
+              <td>Terra Classic</td>
             </tr>
             <tr>
               <td>Address</td>
               <td>{address}</td>
             </tr>
             <tr>
-              <td>Balance</td>
-              <td>{balanceData?.formatted}</td>
-            </tr>
-            <tr>
-              <td>Connector</td>
-              <td>{connector?.id}</td>
-            </tr>
-            <tr>
-              <td>SIWE session</td>
-              <td>
-                {isSignedIn ? 'yes' : 'no'}{' '}
-                {isSignedIn && <button onClick={signOut}>sign out</button>}
-              </td>
+              <td>Wallet</td>
+              <td>{wallet?.name}</td>
             </tr>
           </tbody>
         </table>
@@ -138,70 +54,7 @@ const AccountInfo = () => {
 };
 
 const Actions = () => {
-  const { isConnected, address } = useAccount();
-
-  const {
-    signMessage,
-    isPending: signMessageIsLoading,
-    isError: signMessageIsError,
-  } = useSignMessage();
-  const {
-    signTypedData,
-    isPending: signTypedDataIsLoading,
-    isError: signTypedDataIsError,
-  } = useSignTypedData();
-  const {
-    sendTransaction,
-    isPending: sendTransactionIsLoading,
-    isError: sendTransactionIsError,
-  } = useSendTransaction();
-
-  const testSignMessage = () => {
-    signMessage({
-      message: 'fam token wen',
-    });
-  };
-  const testSignTypedData = () => {
-    signTypedData({
-      // All properties on a domain are optional
-      domain: {
-        name: 'Ether Mail',
-        version: '1',
-        chainId: 1,
-        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
-      },
-      // The named list of all type definitions
-      types: {
-        Person: [
-          { name: 'name', type: 'string' },
-          { name: 'wallet', type: 'address' },
-        ],
-        Mail: [
-          { name: 'from', type: 'Person' },
-          { name: 'to', type: 'Person' },
-          { name: 'contents', type: 'string' },
-        ],
-      },
-      primaryType: 'Mail',
-      message: {
-        from: {
-          name: 'Cow',
-          wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
-        },
-        to: {
-          name: 'Bob',
-          wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
-        },
-        contents: 'Hello, Bob!',
-      },
-    });
-  };
-  const testSendTransaction = () => {
-    sendTransaction({
-      to: (address as Address) ?? '',
-      value: 0n,
-    });
-  };
+  const { isConnected } = useAccount();
 
   return (
     <div
@@ -213,27 +66,7 @@ const Actions = () => {
       }}
     >
       <h2>Actions {!isConnected && `(connect to test)`}</h2>
-      <button disabled={!isConnected} onClick={testSignMessage}>
-        {signMessageIsError
-          ? 'Error. Check console'
-          : signMessageIsLoading
-          ? 'Waiting...'
-          : 'Sign message'}
-      </button>
-      <button disabled={!isConnected} onClick={testSignTypedData}>
-        {signTypedDataIsError
-          ? 'Error. Check console'
-          : signTypedDataIsLoading
-          ? 'Waiting...'
-          : 'Sign typed data'}
-      </button>
-      <button disabled={!isConnected} onClick={testSendTransaction}>
-        {sendTransactionIsError
-          ? 'Error. Check console'
-          : sendTransactionIsLoading
-          ? 'Waiting...'
-          : 'Send transaction'}
-      </button>
+      <p>Actions are currently being migrated to Cosmos.</p>
     </div>
   );
 };
@@ -259,7 +92,7 @@ const Home: NextPage = () => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const { open, setOpen, openSIWE, openAbout } = useModal({
+  const { open, setOpen, openAbout } = useModal({
     onConnect: () => {
       console.log('onConnect Hook');
     },
@@ -268,14 +101,11 @@ const Home: NextPage = () => {
     },
   });
 
-  const { reset } = useConnect();
-  const { isConnected, isConnecting, chain } = useAccount();
+  const { isConnected, isConnecting, wallet } = useAccount();
   const { disconnect } = useDisconnect();
-  const chains = useChains();
 
   const handleDisconnect = () => {
     disconnect();
-    reset();
   };
 
   if (!mounted) return null;
@@ -291,19 +121,9 @@ const Home: NextPage = () => {
           )}
         </div>
 
-        <div className="panel">
-          <h2>Sign In With Ethereum</h2>
-          <SIWEButton
-            showSignOutButton
-            onSignIn={(data?: SIWESession) => {
-              console.log('onSignIn SIWEButton', data);
-            }}
-            onSignOut={() => {
-              console.log('onSignOut SIWEButton');
-            }}
-          />
-          <CustomSIWEButton />
-          <Link href="/siwe/token-gated">Token-gated page &rarr;</Link>
+        <div className="panel" style={{ opacity: 0.5, pointerEvents: 'none' }}>
+          <h2>SIWE (Not available in Cosmos)</h2>
+          <p>SIWE is currently an Ethereum-only feature.</p>
         </div>
 
         <div className="panel">
@@ -311,44 +131,30 @@ const Home: NextPage = () => {
           <p>open: {open.toString()}</p>
           <button onClick={() => setOpen(true)}>Open modal</button>
           <button onClick={() => openAbout()}>Open to About</button>
-          <button onClick={() => openSIWE(true)}>Open to SIWE</button>
         </div>
 
         <AccountInfo />
 
         <div className="panel">
-          <h2>Chains</h2>
+          <h2>Chain Icons</h2>
           <div style={{ display: 'flex', gap: 8 }}>
-            <ChainIcon id={chain?.id} />
-            <ChainIcon id={1} size={64} radius={6} />
-            <ChainIcon id={1337} size={32} radius={0} />
-            <ChainIcon id={2} unsupported />
+            <ChainIcon id="columbus-5" />
+            <ChainIcon id="phoenix-1" size={64} radius={6} />
           </div>
-          <h2>dApps configured chains</h2>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {chains.map((chain) => (
-              <ChainIcon key={chain.id} id={chain.id} />
-            ))}
-          </div>
-          <Link href="/chains">Chains Testbench &rarr;</Link>
         </div>
 
         <div className="panel">
           <h2>Avatars</h2>
           <div style={{ display: 'flex', gap: 8 }}>
-            <Avatar name="lochie.eth" />
-            <Avatar name="pugson.eth" size={64} radius={6} />
-            <Avatar name="benjitaylor.eth" size={32} radius={0} />
-            <Avatar
-              address="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-              size={12}
-            />
+            <Avatar name="Luna" />
+            <Avatar name="Terra" size={64} radius={6} />
+            <Avatar name="Classic" size={32} radius={0} />
           </div>
         </div>
       </main>
       <aside>
         <ConnectKitButton.Custom>
-          {({ isConnected, isConnecting, show, address, ensName, chain }) => {
+          {({ isConnected, isConnecting, show, address, wallet }) => {
             return (
               <button onClick={show}>
                 {isConnected ? (
@@ -359,10 +165,10 @@ const Home: NextPage = () => {
                       gap: 8,
                     }}
                   >
-                    {chain?.name}
-                    <ChainIcon id={chain?.id} />
+                    Terra Classic
+                    <ChainIcon id="columbus-5" />
                     <Avatar address={address} size={12} />
-                    {ensName ?? address}
+                    {address}
                   </div>
                 ) : (
                   <div>
@@ -429,13 +235,6 @@ const Home: NextPage = () => {
             setOptions({ ...options, disclaimer: e.target.value });
           }}
         />
-        <Textbox
-          label="walletConnectName"
-          value={options.walletConnectName as string}
-          onChange={(e: any) => {
-            setOptions({ ...options, walletConnectName: e.target.value });
-          }}
-        />
         <Checkbox
           label="customAvatar"
           value="customAvatar"
@@ -493,17 +292,6 @@ const Home: NextPage = () => {
           }
         />
         <Checkbox
-          label="truncateLongENSAddress"
-          value="truncateLongENSAddress"
-          checked={options.truncateLongENSAddress as boolean}
-          onChange={() =>
-            setOptions({
-              ...options,
-              truncateLongENSAddress: !options.truncateLongENSAddress,
-            })
-          }
-        />
-        <Checkbox
           label="hideBalance"
           value="hideBalance"
           checked={options.hideBalance as boolean}
@@ -556,17 +344,6 @@ const Home: NextPage = () => {
           }
         />
         <Checkbox
-          label="disableSiweRedirect"
-          value="disableSiweRedirect"
-          checked={options.disableSiweRedirect as boolean}
-          onChange={() =>
-            setOptions({
-              ...options,
-              disableSiweRedirect: !options.disableSiweRedirect,
-            })
-          }
-        />
-        <Checkbox
           disabled
           label="embedGoogleFonts"
           value="embedGoogleFonts"
@@ -575,18 +352,6 @@ const Home: NextPage = () => {
             setOptions({
               ...options,
               embedGoogleFonts: !options.embedGoogleFonts,
-            })
-          }
-        />
-        <Checkbox
-          disabled
-          label="bufferPolyfill"
-          value="bufferPolyfill"
-          checked={options.bufferPolyfill as boolean}
-          onChange={() =>
-            setOptions({
-              ...options,
-              bufferPolyfill: !options.bufferPolyfill,
             })
           }
         />

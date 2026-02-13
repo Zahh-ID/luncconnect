@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Types } from 'connectkit';
+import { Types } from 'luncconnect';
 
 type ContextValue = {
   theme: Types.Theme;

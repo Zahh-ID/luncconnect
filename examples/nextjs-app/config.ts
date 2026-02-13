@@ -1,17 +1,27 @@
-import { getDefaultConfig } from 'connectkit';
-import { createConfig } from 'wagmi';
-import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
+import {
+  KeplrWallet,
+  LeapWallet,
+  GalaxyStationWallet,
+} from 'cosmos-connect-core';
 
-export const config = createConfig(
-  getDefaultConfig({
-    appName: 'ConnectKit Next.js demo',
-    chains: [mainnet, polygon, optimism, arbitrum],
-    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-  })
-);
+const terraClassic = {
+  chainId: 'columbus-5',
+  rpc: 'https://terra-classic-rpc.publicnode.com',
+  rest: 'https://terra-classic-lcd.publicnode.com',
+  bech32Prefix: 'terra',
+};
 
-declare module 'wagmi' {
-  interface Register {
-    config: typeof config;
-  }
-}
+export const config = {
+  chains: [terraClassic],
+  wallets: [
+    new KeplrWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new LeapWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+    new GalaxyStationWallet({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    }),
+  ],
+};

@@ -1395,7 +1395,7 @@ cosmos-connect-core@*, "cosmos-connect-core@file:/home/zahh/2026/explore/cosmcon
     "@goblinhunt/cosmes" latest
 
 cosmos-connect-react@*, "cosmos-connect-react@file:/home/zahh/2026/explore/cosmconnect/connectkit/packages/cosmos-connect-react":
-  version "0.1.1"
+  version "0.1.2"
   resolved "file:packages/cosmos-connect-react"
   dependencies:
     framer-motion "^6.5.1"

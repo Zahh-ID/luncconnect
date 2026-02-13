@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConnectKitProvider, ConnectKitButton } from 'connectkit';
+import { ConnectKitProvider, ConnectKitButton } from 'luncconnect';
 import {
   KeplrWallet,
   LeapWallet,
@@ -8,7 +8,7 @@ import {
   CosmostationWallet,
   LUNCDashWallet,
   WalletConnectWallet,
-} from '@yourorg/cosmos-connect-core';
+} from 'cosmos-connect-core';
 
 const terraClassic = {
   chainId: 'columbus-5',

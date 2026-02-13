@@ -1,4 +1,4 @@
-import { ConnectKitButton } from 'connectkit';
+import { ConnectKitButton } from 'luncconnect';
 
 function App() {
   return (
